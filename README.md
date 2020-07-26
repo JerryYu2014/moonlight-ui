@@ -1,2 +1,2 @@
 # moonlight-ui
-Moonlight UI is a component library based on Vue
+moonlight-ui is a component library based on Vue
