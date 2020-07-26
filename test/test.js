@@ -13,7 +13,7 @@ describe('moonlight-ui function add test', () => {
 
 describe('moonlight-ui function makePy test', () => {
   it('should return mayun', () => {
-    const result = ui.makePy('马云');
+    const result = ui.makePinyin('马云');
     expect(result).to.equal('mayun');
   });
 });

@@ -1,11 +1,9 @@
-import Utils, { Pinyin } from 'moonlight-utils';
+import { makePy } from 'moonlight-utils';
 
 export function add(a: number, b: number): number {
-  let utils = new Utils();
-  return utils.add(a, b);
+  return a + b;
 }
 
-export function makePy(str: String, extractFirst: boolean): String {
-  let py = new Pinyin();
-  return py.makePy(str, extractFirst);
+export function makePinyin(str: String, extractFirst: boolean): String {
+  return makePy(str, extractFirst);
 }

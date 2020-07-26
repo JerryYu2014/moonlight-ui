@@ -30,6 +30,6 @@
     "typescript": "^3.9.7"
   },
   "dependencies": {
-    "moonlight-utils": "^1.0.9"
+    "moonlight-utils": "^1.0.10"
   }
 }
