@@ -10,3 +10,10 @@ describe('moonlight-ui function add test', () => {
     expect(result).to.equal(2);
   });
 });
+
+describe('moonlight-ui function makePy test', () => {
+  it('should return mayun', () => {
+    const result = ui.makePy('马云');
+    expect(result).to.equal('mayun');
+  });
+});
