@@ -17,5 +17,5 @@ REM Code coverage
 npm i istanbul -D
 npm i coveralls -D
 
-npm audit fix
+npm audit fix --registry=https://registry.npmjs.org/
 npm audit --registry=https://registry.npmjs.org/
