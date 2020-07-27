@@ -1,5 +1,10 @@
-lib/
 .vscode/
+build/
+config/
+lib/
+src/
+static/
+test/
 
 note.md
 cmd.bat

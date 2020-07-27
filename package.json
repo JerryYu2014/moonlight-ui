@@ -1,6 +1,6 @@
 {
   "name": "moonlight-ui-x",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Moonlight UI is a component library based on Vue",
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
