@@ -4,6 +4,10 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 
+// import '@/plugin/assets/scss/index.scss'
+import mlui from '@/plugin'
+Vue.use(mlui)
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
