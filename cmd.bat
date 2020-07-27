@@ -16,3 +16,6 @@ npm i chai -D
 REM Code coverage
 npm i istanbul -D
 npm i coveralls -D
+
+npm audit fix
+npm audit --registry=https://registry.npmjs.org/
