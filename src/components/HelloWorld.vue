@@ -36,7 +36,7 @@
       </li>
     </ul>
 
-    <ml-button>默认按钮</ml-button>
+    <ml-button type='success'>NICE</ml-button>
   </div>
 </template>
 
@@ -45,7 +45,7 @@ export default {
   name: 'HelloWorld',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App 11'
+      msg: 'Welcome to Your Vue.js App'
     }
   }
 }

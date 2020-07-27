@@ -21,7 +21,7 @@ export default {
     },
     type: {
       type: String,
-      default: 'default', // ['default',success', 'warning', 'error', 'info']
+      default: 'default', // ['default', 'success', 'warning', 'error', 'info']
       validator (value) {
         let types = ['default', 'primary', 'success', 'warning', 'error', 'info']
         return types.includes(value) || !value
