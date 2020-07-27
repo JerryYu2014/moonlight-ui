@@ -19,3 +19,5 @@ npm i coveralls -D
 
 npm audit fix --registry=https://registry.npmjs.org/
 npm audit --registry=https://registry.npmjs.org/
+
+npm publish --registry=https://registry.npmjs.org/
