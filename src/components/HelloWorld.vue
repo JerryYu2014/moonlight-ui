@@ -1,7 +1,7 @@
 <template>
-  <div class="hello">
+  <div class="hellox">
     <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
+    <!-- <h2>Essential Links</h2>
     <ul>
       <li>
         <a href="https://vuejs.org" target="_blank">Core Docs</a>
@@ -34,9 +34,9 @@
       <li>
         <a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a>
       </li>
-    </ul>
+    </ul> -->
 
-    <ml-button type='success'>NICE</ml-button>
+    <ml-button shape='circle' size='large' type='error'>NICE</ml-button>
   </div>
 </template>
 

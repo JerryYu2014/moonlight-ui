@@ -7,7 +7,7 @@
 <script>
 export default {
   name: 'Button',
-  display: 'Button按钮',
+  display: 'Button',
   data () {
     return {
       preCls: 'ml-btn'
