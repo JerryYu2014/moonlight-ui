@@ -1,9 +1,9 @@
 
 REM npm 模块初始化及发布
 npm init
-npm adduser
-npm whoami
-npm publish
+npm adduser --registry=https://registry.npmjs.org/
+npm whoami --registry=https://registry.npmjs.org/
+npm publish --registry=https://registry.npmjs.org/
 
 npm i typescript -D
 

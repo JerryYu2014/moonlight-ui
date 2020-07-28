@@ -1,7 +1,8 @@
 {
   "name": "moonlight-ui-x",
-  "version": "1.0.1",
+  "version": "1.0.5",
   "description": "Moonlight UI is a component library based on Vue",
+  "main": "lib/mlui.js",
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
@@ -9,7 +10,8 @@
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit && npm run e2e",
     "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs",
-    "build": "node build/build.js"
+    "build": "node build/build.js",
+    "package": "cross-env NODE_ENV=production webpack --progress --hide-modules --config build/webpack.npm.conf.js"
   },
   "repository": {
     "type": "git",

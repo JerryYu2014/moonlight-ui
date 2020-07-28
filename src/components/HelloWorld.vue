@@ -41,11 +41,13 @@
 </template>
 
 <script>
+import { makePy } from 'moonlight-utils'
+
 export default {
   name: 'HelloWorld',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      msg: 'Welcome to Your Vue.js App ' + makePy('中', false)
     }
   }
 }

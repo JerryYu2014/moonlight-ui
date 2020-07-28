@@ -1,11 +1,12 @@
 .vscode/
 build/
 config/
-lib/
+dist/
 src/
 static/
 test/
 
+index.html
 note.md
 cmd.bat
 tsconfig.json
