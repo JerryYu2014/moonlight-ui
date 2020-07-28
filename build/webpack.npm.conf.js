@@ -9,7 +9,8 @@ function resolve(dir) {
 module.exports = {
     entry: {
         style: './src/plugin/style.js',
-        mlui: './src/plugin/index.js', // 出口文件(mlui.js)必须与pakage.json中的main相同；
+        // 出口文件(mlui.js)必须与pakage.json中的main相同
+        mlui: './src/plugin/index.js',
     },
     output: {
         path: resolve("lib"),
