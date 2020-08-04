@@ -36,7 +36,7 @@
       </li>
     </ul> -->
 
-    <ml-button shape='circle' size='large' type='error'>NICE</ml-button>
+    <ml-button size='large' type='error'>NICE</ml-button>
   </div>
 </template>
 

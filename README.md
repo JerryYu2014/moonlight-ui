@@ -33,5 +33,5 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 ### Install
 
 ```
-npm install moonlight-ui-x --registry=https://registry.npmjs.org/
+npm i moonlight-ui-x --registry=https://registry.npmjs.org/
 ```
