@@ -34,14 +34,15 @@
       <li>
         <a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a>
       </li>
-    </ul> -->
+    </ul>-->
 
-    <ml-button size='large' type='error'>NICE</ml-button>
+    <ml-button size="large" type="error">NICE</ml-button>
   </div>
 </template>
 
 <script>
 import { makePy } from 'moonlight-utils'
+import { } from 'moonlight-algorithm'
 
 export default {
   name: 'HelloWorld',
