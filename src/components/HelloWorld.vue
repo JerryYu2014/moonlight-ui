@@ -1,7 +1,7 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-    <!-- <h2>Essential Links</h2>
+    <!-- <h1>{{ msg }}</h1>
+    <h2>Essential Links</h2>
     <ul>
       <li>
         <a href="https://vuejs.org" target="_blank">Core Docs</a>
@@ -34,23 +34,26 @@
       <li>
         <a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a>
       </li>
-    </ul>-->
+    </ul> -->
 
+    <h1>{{ msg }}</h1>
     <ml-button size="large" type="error">NICE</ml-button>
 
-    <ml-scrollbar>NICE 123456789</ml-scrollbar>
+    <ml-scrollbar style="width:100%;height:200px;overflow:auto;">
+      <div class="scrollbar">NICE 123456789</div>
+    </ml-scrollbar>
   </div>
 </template>
 
 <script>
 import { makePy } from 'moonlight-utils'
-import { } from 'moonlight-algorithm'
+import {} from 'moonlight-algorithm'
 
 export default {
   name: 'HelloWorld',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App ' + makePy('中', false)
+      msg: '中：' + makePy('中', false)
     }
   }
 }
@@ -72,5 +75,11 @@ li {
 }
 a {
   color: #42b983;
+}
+
+.scrollbar {
+  width: 110%;
+  height: 200%;
+  /* margin: 0 auto; */
 }
 </style>

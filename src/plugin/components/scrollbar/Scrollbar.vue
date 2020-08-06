@@ -1,8 +1,6 @@
 <template>
-  <div class="test test-1">
-    <div class="scrollbar">
+  <div :class="classSclb" class="ml-sclb-webkit-scrollbar">
       <slot></slot>
-    </div>
   </div>
 </template>
 
@@ -16,7 +14,6 @@ export default {
     }
   },
   props: {
-    isDisabled: Boolean,
     shape: {
       type: String,
       default: '' // 'circle'圆角, 'rectangle'直角
@@ -42,7 +39,7 @@ export default {
     }
   },
   computed: {
-    classBtn () {
+    classSclb () {
       let { preCls, type, size, shape } = this
       let className = [
         `${preCls}`,
@@ -55,47 +52,35 @@ export default {
       return className
     }
   },
-  methods: {
-    clickBtn (ev) {
-      this.$emit('click', ev)
-    }
-  }
+  methods: {}
 }
 </script>
 
 <style scoped>
-.test {
-  width: 100%;
-  height: 200px;
-  overflow: auto;
-  float: left;
-  margin: 5px;
-  border: none;
+.ml-sclb-webkit-scrollbar::-webkit-scrollbar {
+  /* 滚动条整体样式：高宽分别对应横竖滚动条的粗细 */
+  width: 20px;
+  height: 10px;
 }
 
-.scrollbar {
-  width: 30px;
-  height: 300px;
-  margin: 0 auto;
-}
-
-.test-1::-webkit-scrollbar {
-  /*滚动条整体样式*/
-  width: 10px; /*高宽分别对应横竖滚动条的尺寸*/
-  height: 1px;
-}
-
-.test-1::-webkit-scrollbar-thumb {
-  /*滚动条里面小方块*/
+.ml-sclb-webkit-scrollbar::-webkit-scrollbar-thumb {
+  /* 滚动条里的滑动方块 */
   border-radius: 10px;
   -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
   background: #535353;
 }
 
-.test-1::-webkit-scrollbar-track {
-  /*滚动条里面轨道*/
-  -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+.ml-sclb-webkit-scrollbar::-webkit-scrollbar-track {
+  /* 滚动条里的滑动轨道 */
   border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
   background: #ededed;
 }
+
+/* .ml-sclb-webkit-scrollbar::-webkit-scrollbar-button{
+}
+.ml-sclb-webkit-scrollbar::-webkit-scrollbar-corner{
+} */
 </style>>
