@@ -39,6 +39,8 @@
     <h1>{{ msg }}</h1>
     <ml-button size="large" type="error">NICE</ml-button>
 
+    <ml-radio>NICE</ml-radio>
+
     <ml-scrollbar style="width:100%;height:200px;overflow:auto;">
       <div class="scrollbar">NICE 123456789</div>
     </ml-scrollbar>
