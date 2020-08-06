@@ -1,6 +1,5 @@
 {
     "workbench.sideBar.location": "right",
-    "workbench.startupEditor": "newUntitledFile",
     "terminal.integrated.shell.windows": "C:\\Windows\\System32\\cmd.exe",
     "git.ignoreLimitWarning": true,
     "git.autofetch": true,
@@ -24,14 +23,15 @@
     "editor.tabSize": 4,
     // 每次保存的时候自动格式化
     // "editor.formatOnSave": true,
-    //   "editor.formatOnType": true,
+    // "editor.formatOnType": true,
     "editor.codeActionsOnSave": {
-        "source.fixAll": true,
+        // "source.fixAll": true,
+        "source.fixAll.eslint": true
         // "source.organizeImports": true
     },
-    "[vue]": {
-        "editor.defaultFormatter": "octref.vetur"
-    },
+    // "[vue]": {
+    //     "editor.defaultFormatter": "octref.vetur"
+    // },
     // 让函数(名)和后面的括号之间加个空格
     "javascript.format.insertSpaceBeforeFunctionParenthesis": false,
     // 去掉代码结尾的分号
@@ -39,7 +39,7 @@
     // 使用单引号替代双引号
     // "prettier.singleQuote": false,
     // 这个按用户自身习惯选择
-    // "vetur.format.defaultFormatter.js": "prettier",
+    "vetur.format.defaultFormatter.js": "prettier",
     // "vetur.format.defaultFormatter.html": "js-beautify-html",
     // "vetur.format.defaultFormatterOptions": {
     //   "js-beautify-html": {

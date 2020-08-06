@@ -37,6 +37,8 @@
     </ul>-->
 
     <ml-button size="large" type="error">NICE</ml-button>
+
+    <ml-scrollbar>NICE 123456789</ml-scrollbar>
   </div>
 </template>
 
