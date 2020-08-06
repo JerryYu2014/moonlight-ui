@@ -3,6 +3,7 @@
 ## 滚动条
 
 - [CSS3自定义滚动条样式](https://www.cnblogs.com/ranyonsue/p/9487599.html)
+- [关于 element-ui 的隐藏组件el-scrollbar](https://segmentfault.com/a/1190000019325694?utm_source=tag-newest)
 
 ## 富文本编辑器
 
