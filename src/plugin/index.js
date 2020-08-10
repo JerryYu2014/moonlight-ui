@@ -13,7 +13,7 @@ import * as components from './components'
 
 export default {
   install (Vue, options) {
-    console.log(components)
+    // console.log(components)
     for (let component in components) {
       Vue.component('ml' + component, components[component])
     }

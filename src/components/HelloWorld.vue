@@ -1,11 +1,12 @@
 <template>
   <ml-scrollbar style="width:100%;height:98vh;overflow:auto;">
-    <div class="scrollbar">
+    <div style="width: 100%;height: 150vh;">
       <h1>{{ msg }}</h1>
 
       <ml-button size="large" type="error">NICE</ml-button>
       <ml-radio :options="radioOptions">NICE</ml-radio>
-      <ml-switch :options="radioOptions" />
+      <ml-switch />
+      <ml-checkbox />
     </div>
   </ml-scrollbar>
 </template>
@@ -19,7 +20,10 @@ export default {
   data () {
     return {
       msg: '中：' + makePy('中', false),
-      radioOptions: [{label: '啊123', value: 123}, {label: '啊456', value: 456}]
+      radioOptions: [
+        { label: '啊123', value: 123 },
+        { label: '啊456', value: 456 }
+      ]
     }
   }
 }
@@ -41,11 +45,5 @@ li {
 }
 a {
   color: #42b983;
-}
-
-.scrollbar {
-  width: 100%;
-  height: 150vh;
-  /* margin: 0 auto; */
 }
 </style>

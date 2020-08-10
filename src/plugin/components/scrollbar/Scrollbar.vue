@@ -14,29 +14,29 @@ export default {
     }
   },
   props: {
-    shape: {
-      type: String,
-      default: '' // 'circle'圆角, 'rectangle'直角
-    },
-    type: {
-      type: String,
-      default: 'default', // ['default', 'success', 'warning', 'error', 'info']
-      validator (value) {
-        let types = [
-          'default',
-          'primary',
-          'success',
-          'warning',
-          'error',
-          'info'
-        ]
-        return types.includes(value) || !value
-      }
-    },
-    size: {
-      type: String,
-      default: '' // ['large', 'medium', 'small']
-    }
+    // shape: {
+    //   type: String,
+    //   default: '' // 'circle'圆角, 'rectangle'直角
+    // },
+    // type: {
+    //   type: String,
+    //   default: 'default', // ['default', 'success', 'warning', 'error', 'info']
+    //   validator (value) {
+    //     let types = [
+    //       'default',
+    //       'primary',
+    //       'success',
+    //       'warning',
+    //       'error',
+    //       'info'
+    //     ]
+    //     return types.includes(value) || !value
+    //   }
+    // },
+    // size: {
+    //   type: String,
+    //   default: '' // ['large', 'medium', 'small']
+    // }
   },
   computed: {
     classSclb () {
