@@ -17,3 +17,7 @@
 
 ## 时间日期选择器
 
+
+## vue的命名限制
+
+- [[Vue warn]: Do not use built-in or reserved HTML elements as component id:](https://www.jianshu.com/p/97668b6fd90d)

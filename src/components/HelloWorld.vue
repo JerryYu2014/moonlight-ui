@@ -4,7 +4,8 @@
       <h1>{{ msg }}</h1>
 
       <ml-button size="large" type="error">NICE</ml-button>
-      <ml-radio>NICE</ml-radio>
+      <ml-radio :options="radioOptions">NICE</ml-radio>
+      <ml-switch :options="radioOptions" />
     </div>
   </ml-scrollbar>
 </template>
@@ -17,7 +18,8 @@ export default {
   name: 'HelloWorld',
   data () {
     return {
-      msg: '中：' + makePy('中', false)
+      msg: '中：' + makePy('中', false),
+      radioOptions: [{label: '啊123', value: 123}, {label: '啊456', value: 456}]
     }
   }
 }

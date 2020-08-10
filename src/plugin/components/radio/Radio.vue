@@ -1,68 +1,121 @@
 <template>
-  <label>
-    <span>
-      <input type="radio" @click="clickBtn" :class="classRadio" :disabled="isDisabled" />
-    </span>
-
-    <span>
-      <slot></slot>
-    </span>
-  </label>
+  <div class="ml-radio">
+    <div class="ml-radio-list" :class="{'ml-radio-direction':direction=='vertical'}">
+      <div
+        class="ml-radio-cell"
+        v-for="(option,index) in options"
+        :key="index"
+        @change="handleChange"
+      >
+        <input
+          id="ml-radio"
+          class="ml-radio-input"
+          type="radio"
+          :style="{width:width+'px',height:width+'px'}"
+          v-model="currentValue"
+          :disabled="option.disabled"
+          :value="option.value || option"
+        />
+        <label
+          for="ml-radio"
+          class="ml-radio-label"
+          :style="{width:width-2+'px',height:width-2+'px','background-color':option.value==currentValue?backgroundColor:normalColor,'border':option.value==currentValue?'1px solid'+backgroundColor:'1px solid'+normalColor}"
+          :class="{'ml-radio-disabled':option.disabled}"
+        ></label>
+        <span
+          class="ml-radio-text"
+          :style="{color:option.value==currentValue?backgroundColor:normalColor}"
+        >{{option.label}}</span>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
   name: 'Radio',
-  display: 'Radio',
   data () {
     return {
-      preCls: 'ml-radio'
+      currentValue: this.value
     }
   },
   props: {
-    isDisabled: Boolean,
-    shape: {
-      type: String,
-      default: '' // 'circle'圆角, 'rectangle'直角
+    width: {
+      type: [Number, String],
+      default: 20
     },
-    type: {
-      type: String,
-      default: 'default', // ['default', 'success', 'warning', 'error', 'info']
-      validator (value) {
-        let types = [
-          'default',
-          'primary',
-          'success',
-          'warning',
-          'error',
-          'info'
-        ]
-        return types.includes(value) || !value
-      }
+    value: String,
+    options: {
+      type: Array,
+      required: true
     },
-    size: {
+    direction: {
       type: String,
-      default: '' // ['large', 'medium', 'small']
-    }
-  },
-  computed: {
-    classRadio () {
-      let { preCls, type, size, shape } = this
-      let className = [
-        `${preCls}`,
-        {
-          [`${preCls}-${type}`]: !!type,
-          [`${preCls}-${size}`]: !!size,
-          [`${preCls}-${shape}`]: !!shape
-        }
-      ]
-      return className
+      default: 'horizontal' // 可选vertical垂直，默认horizontal水平
+    },
+    normalColor: {
+      type: String,
+      default: '#c8c9cc'
+    },
+    backgroundColor: {
+      type: String,
+      default: '#25c6fc'
     }
   },
   methods: {
-    clickBtn (ev) {
-      this.$emit('click', ev)
+    handleChange () {
+      this.$emit('input', this.currentValue).$emit('change', this.currentValue)
+    }
+  },
+  created () {
+    // console.log(this.backgroundColor)
+    if (typeof this.width === 'string' && this.width.indexOf('px') !== -1) {
+      this.width = this.width.split('px')[0]
     }
   }
 }
 </script>
+
+<style lang="scss">
+.ml-radio {
+  display: inline-block;
+  .ml-radio-list {
+    display: flex;
+    .ml-radio-cell {
+      padding: 5px 10px;
+      display: flex;
+      align-items: center;
+      position: relative;
+      .ml-radio-input {
+        position: absolute;
+        opacity: 0;
+        z-index: 999;
+        cursor: pointer;
+      }
+      .ml-radio-label {
+        border-radius: 100%;
+        display: inline-block;
+        margin-right: 5px;
+        vertical-align: top;
+        // cursor: pointer;
+        text-align: center;
+        -webkit-transition: all 250ms ease;
+        transition: all 250ms ease;
+        outline: none;
+        box-shadow: inset 0 0 0 4px #f4f4f4;
+      }
+      .ml-radio-disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      .ml-radio-text {
+        display: inline-block;
+      }
+    }
+  }
+  .ml-radio-direction {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+</style>
