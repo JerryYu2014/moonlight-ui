@@ -4,14 +4,16 @@
     "description": "moonlight-ui-x is a ui component library based on vue.js",
     "main": "lib/mlui.js",
     "scripts": {
-        "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+        "dev": "webpack-dev-server --inline --progress --open --config build/webpack.dev.conf.js",
         "start": "npm run dev",
         "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
         "e2e": "node test/e2e/runner.js",
         "test": "npm run unit && npm run e2e",
         "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs",
         "build": "node build/build.js",
-        "package": "cross-env NODE_ENV=production webpack --progress --hide-modules --config build/webpack.npm.conf.js"
+        "package": "cross-env NODE_ENV=production webpack --progress --hide-modules --config build/webpack.npm.conf.js",
+        "publish:pkg": "npm run package && npm publish --registry=https://registry.npmjs.org/",
+        "upmoon": "npm i moonlight-algorithm moonlight-utils --registry=https://registry.npmjs.org/"
     },
     "repository": {
         "type": "git",
@@ -30,7 +32,7 @@
     },
     "homepage": "https://github.com/JerryYu2014/moonlight-ui#readme",
     "dependencies": {
-        "moonlight-algorithm": "^1.0.2",
+        "moonlight-algorithm": "^1.0.7",
         "moonlight-utils": "^1.0.10",
         "vue": "^2.5.2",
         "vue-router": "^3.0.1"

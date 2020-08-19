@@ -13,7 +13,7 @@
 
 <script>
 import { makePy } from 'moonlight-utils'
-import {} from 'moonlight-algorithm'
+import { bubbleSort, svgCompile } from 'moonlight-algorithm'
 
 export default {
   name: 'HelloWorld',
@@ -25,6 +25,16 @@ export default {
         { label: '啊456', value: 456 }
       ]
     }
+  },
+  mounted () {
+    console.log(bubbleSort([2, 3, 9]))
+
+    // 调用svgCompile编译器
+    // const code = 'Paper 0 Pen 100 Line 0 50 100 50';
+    const code = 'Paper 0 Pen 100 Line 0 50 100 100'
+    const svg = svgCompile(code)
+    console.log(svg)
+    // document.getElementById('svg-compile').innerHTML = svg
   }
 }
 </script>
