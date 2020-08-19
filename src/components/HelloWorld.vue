@@ -1,12 +1,14 @@
 <template>
   <ml-scrollbar style="width:100%;height:98vh;overflow:auto;">
-    <div style="width: 100%;height: 150vh;">
+    <div style="width: 100%;height: 150vh;text-align: center;">
       <h1>{{ msg }}</h1>
 
       <ml-button size="large" type="error">NICE</ml-button>
       <ml-radio :options="radioOptions">NICE</ml-radio>
       <ml-switch />
       <ml-checkbox />
+
+      <div id="svg-compile"></div>
     </div>
   </ml-scrollbar>
 </template>
@@ -34,7 +36,7 @@ export default {
     const code = 'Paper 0 Pen 100 Line 0 50 100 100'
     const svg = svgCompile(code)
     console.log(svg)
-    // document.getElementById('svg-compile').innerHTML = svg
+    document.getElementById('svg-compile').innerHTML = svg
   }
 }
 </script>
