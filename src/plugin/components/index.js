@@ -8,11 +8,14 @@ import CheckboxGroup from './checkbox-group/CheckboxGroup.vue'
 import Radio from './radio/Radio.vue'
 import Switch from './switch/Switch.vue'
 
+import Tpleditor from './tpleditor/Tpleditor.vue'
+
 export {
   Button,
   Scrollbar,
   Checkbox,
   CheckboxGroup,
   Radio,
-  Switch
+  Switch,
+  Tpleditor
 }
