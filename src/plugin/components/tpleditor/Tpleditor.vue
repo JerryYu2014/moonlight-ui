@@ -18,7 +18,8 @@
     contenteditable
     class="ml-tpleditor"
     @keyup.native="handleKeyup"
-  >{{ content }}</Scrollbar>
+    v-model="content"
+  ></Scrollbar>
 </template>
 
 <script>
@@ -41,7 +42,7 @@ export default {
     },
     content: {
       type: String,
-      default: ''
+      default: null
     }
   },
   watch: {
