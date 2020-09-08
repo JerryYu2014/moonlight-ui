@@ -10,10 +10,11 @@
 
       <div id="svg-compile"></div>
       <!-- :content="DiagnosticTemplate" -->
-      <ml-tpleditor
-        v-model="DiagnosticTemplate"
-        style="width: 100wh;"
-      />
+      <div style="width:95%; height:40vh;border:1px solid #000;text-align:left;padding:20px;">
+        <ml-tpleditor v-model="DiagnosticTemplate" style="width: 90wh;" />
+        <ml-button size="large" type="error" @click="handleBtnClick">修改数据</ml-button>
+        <div><strong>提取的数据:</strong>{{DiagnosticTemplate}}</div>
+      </div>
 
       <!-- <ml-tpleditor
         v-model="DiagnosticTemplate"
@@ -36,7 +37,7 @@ export default {
     return {
       msg: '中：' + makePy('中', false),
       DiagnosticTemplate:
-          '2D+3D+MPR：双侧茎突走行未见异常，左侧长度为[_____]cm，右侧长度为[_____]cm。茎突骨质未见异常。[abc;def;ghk; ]未见异常改变。',
+        '2D+3D+MPR：双侧茎突走行未见异常，左侧长度为[_____]cm，右侧长度为[_____]cm。茎突骨质未见异常。[abc;def;ghk; ]未见异常改变。',
       //   DiagnosticTemplate: null,
       radioOptions: [
         { label: '啊123', value: 123 },
@@ -63,6 +64,10 @@ export default {
     handleTpleditorChange (content) {
       console.log('content/content', content)
       //   this.DiagnosticTemplate = content
+    },
+    handleBtnClick () {
+      this.DiagnosticTemplate +=
+        '2D+3D+MPR：双侧茎突走行未见异常，左侧长度为[ABC;123;+++]cm，右侧长度为[_____]cm。茎突骨质未见异常。[123;456;789; ]未见异常改变。'
     }
   }
 }

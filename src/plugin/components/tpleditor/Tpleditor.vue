@@ -1,12 +1,5 @@
 <template>
-  <Scrollbar
-    :ref="tpleditorCUID"
-    :id="tpleditorCUID"
-    contenteditable
-    class="ml-tpleditor"
-    @keyup.native="handleKeyup"
-    v-model="content"
-  ></Scrollbar>
+  <Scrollbar :ref="tpleditorCUID" :id="tpleditorCUID" contenteditable class="ml-tpleditor" @keyup.native="handleKeyup" v-model="content" />
 </template>
 
 <script>
@@ -59,7 +52,7 @@ export default {
   methods: {
     handleKeyup () {
       let source
-      console.log('this.TemplateItemList---', this.TemplateItemList)
+      //   console.log('this.TemplateItemList---', this.TemplateItemList)
       for (let i = 0; i < this.TemplateItemList.length; i++) {
         const element = this.TemplateItemList[i]
         if (i === 0) {
@@ -73,20 +66,21 @@ export default {
       const regExp = new RegExp(/(?<=\[).*?(?=\])/g)
 
       for (let k = 0; k < this.TemplateItemList.length; k++) {
-        const matchRegExp = source.match(regExp)
+        const matchRegExp = this.TemplateItemList[0].Source.match(regExp)
         if (matchRegExp) {
           for (let j = 0; j < matchRegExp.length; j++) {
             // const element = matchRegExp[j]
-            const arr = regExp.exec(source)
 
-            if (k === j) {
+            if (j === k) {
+              const arr = regExp.exec(source)
+
               this.TemplateItemList[j].Mark = arr[0]
               this.TemplateItemList[j].Source = arr.input
               // this.TemplateItemList[j].Values = arr[0]
               this.TemplateItemList[j].StartPosition = arr.index
               this.TemplateItemList[j].EndPosition = arr.index + arr[0].length
 
-              console.log(`ARR-${j}`, arr)
+              //   console.log(`ARR-${j}`, arr)
 
               const ex = this.TemplateItemList[k]
 
@@ -99,21 +93,18 @@ export default {
             }
           }
         }
-
-        // debugger
-
-        // ex.Source = source
       }
 
       console.log('source', source)
-      console.log('this.TemplateItemList', this.TemplateItemList)
+      //   console.log('this.TemplateItemList', this.TemplateItemList)
 
       //   console.log(
       //     'this.$refs[this.tpleditorCUID].$el.innerHTML',
       //     this.$refs[this.tpleditorCUID].$el.innerHTML
       //   )
 
-      this.$emit('change', this.$refs[this.tpleditorCUID].$el.innerHTML)
+      //   this.$emit('change', this.$refs[this.tpleditorCUID].$el.innerHTML)
+      this.$emit('change', source)
     },
     compileTextToUI (text) {
       // 包含 []
@@ -140,6 +131,7 @@ export default {
         select.style =
           'width:80px;border:none;border-bottom:1px solid blue;outline: none;color: blue;'
 
+        this.TemplateItemList = []
         for (let index = 0; index < matchRegExp2.length; index++) {
           const arr = regExp2.exec(text)
 
@@ -186,7 +178,7 @@ export default {
           this.TemplateItemList.push(TemplateItem)
         }
 
-        console.log('this.TemplateItemList////', this.TemplateItemList)
+        // console.log('this.TemplateItemList////', this.TemplateItemList)
 
         p.innerHTML = text
 
