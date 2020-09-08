@@ -1,20 +1,7 @@
 <template>
-  <!-- <div contenteditable class="ml-tpleditor">
-    <blockquote contenteditable="true">
-      <p>Edit this content to add your own quote</p>
-    </blockquote>
-    <cite contenteditable="true">-- Write your own name here</cite>
-    <br />123
-    <input type="text" name id style="display:inline;" />
-    kasdfklja
-    <select name id style="display:inline;">
-      <option value="123">张三</option>
-      <option value="456">李四</option>
-    </select>
-  </div>-->
-
   <Scrollbar
-    ref="tpleditor"
+    :ref="tpleditorCUID"
+    :id="tpleditorCUID"
     contenteditable
     class="ml-tpleditor"
     @keyup.native="handleKeyup"
@@ -23,13 +10,19 @@
 </template>
 
 <script>
+// import Vue from 'vue'
+
 import Scrollbar from '../scrollbar/Scrollbar'
 
 export default {
   name: 'Tpleditor',
   components: { Scrollbar },
   data () {
-    return {}
+    return {
+      tpleditorCUID: `tpleditor_${new Date().getTime()}`,
+      TemplateItemList: [],
+      OriginalTemplateContent: ''
+    }
   },
   model: {
     prop: 'content',
@@ -45,49 +38,179 @@ export default {
       default: null
     }
   },
+  directives: {
+    focus: {
+      // 指令的定义
+      inserted: function (el) {
+        el.focus()
+      }
+    }
+  },
   watch: {
-    content (oldval, newval) {
-      //   this.compileTextToUI(newval)
+    content (val, oldval) {
+      this.compileTextToUI(val)
     }
   },
   mounted () {
-    // console.log('props', this.$props)
-    this.$refs.tpleditor.$el.innerText = this.content
+    this.OriginalTemplateContent = this.content
+
+    this.compileTextToUI(this.content)
   },
   methods: {
     handleKeyup () {
-      //   console.log('arguments', arguments)
-      //   console.log('content', this.content)
+      let source
+      console.log('this.TemplateItemList---', this.TemplateItemList)
+      for (let i = 0; i < this.TemplateItemList.length; i++) {
+        const element = this.TemplateItemList[i]
+        if (i === 0) {
+          source = element.Source
+        }
+        element.Values = document.getElementById(
+          `${this.tpleditorCUID}_${i + 1}`
+        ).value
+      }
 
-      this.$emit('change', this.$refs.tpleditor.$el.innerText)
-      //   this.keepLastIndex(this.$refs.tpleditor.$el)
+      const regExp = new RegExp(/(?<=\[).*?(?=\])/g)
 
-      //   this.compileTextToUI(newval)
+      for (let k = 0; k < this.TemplateItemList.length; k++) {
+        const matchRegExp = source.match(regExp)
+        if (matchRegExp) {
+          for (let j = 0; j < matchRegExp.length; j++) {
+            // const element = matchRegExp[j]
+            const arr = regExp.exec(source)
 
-      console.log(
-        'this.$refs.tpleditor.$el.innerText',
-        this.$refs.tpleditor.$el.innerText
-      )
+            if (k === j) {
+              this.TemplateItemList[j].Mark = arr[0]
+              this.TemplateItemList[j].Source = arr.input
+              // this.TemplateItemList[j].Values = arr[0]
+              this.TemplateItemList[j].StartPosition = arr.index
+              this.TemplateItemList[j].EndPosition = arr.index + arr[0].length
+
+              console.log(`ARR-${j}`, arr)
+
+              const ex = this.TemplateItemList[k]
+
+              source = this.replaceStrByPos(
+                source,
+                ex.StartPosition - 1,
+                ex.EndPosition + 1,
+                ex.Values
+              )
+            }
+          }
+        }
+
+        // debugger
+
+        // ex.Source = source
+      }
+
+      console.log('source', source)
+      console.log('this.TemplateItemList', this.TemplateItemList)
+
+      //   console.log(
+      //     'this.$refs[this.tpleditorCUID].$el.innerHTML',
+      //     this.$refs[this.tpleditorCUID].$el.innerHTML
+      //   )
+
+      this.$emit('change', this.$refs[this.tpleditorCUID].$el.innerHTML)
     },
     compileTextToUI (text) {
-      console.log(text)
+      // 包含 []
+      //   const regExp1 = new RegExp(/\[.*?\]/gi)
+      // 不包含 []
+      const regExp2 = new RegExp(/(?<=\[).*?(?=\])/g)
+
+      if (regExp2.test(text)) {
+        // const matchRegExp1 = text.match(regExp1)
+        // console.log('matchRegExp1', matchRegExp1)
+
+        const matchRegExp2 = text.match(regExp2)
+        // console.log('matchRegExp2', matchRegExp2)
+
+        const p = document.createElement('p')
+
+        const input = document.createElement('input')
+        // input.className = 'ml-tpleditor-input'
+        input.type = 'text'
+        input.style =
+          'width:50px;border:none;border-bottom:1px solid blue;outline: none;color: blue;text-align:center;'
+
+        const select = document.createElement('select')
+        select.style =
+          'width:80px;border:none;border-bottom:1px solid blue;outline: none;color: blue;'
+
+        for (let index = 0; index < matchRegExp2.length; index++) {
+          const arr = regExp2.exec(text)
+
+          const TemplateItem = {
+            Mark: arr[0],
+            Source: arr.input,
+            Values: '',
+            StartPosition: arr.index,
+            EndPosition: arr.index + arr[0].length
+          }
+          let ctrlType = 0
+          const strArr = arr[0].split(';')
+
+          if (strArr && Array.isArray(strArr) && strArr.length > 1) {
+            // 选择控件
+            ctrlType = 0
+
+            if (select.options && select.options.length > 0) {
+              for (let idx = select.options.length; idx >= 0; idx--) {
+                select.options.remove(idx)
+              }
+            }
+
+            for (let idx = 0; idx < strArr.length; idx++) {
+              const selectOption = document.createElement('option')
+              selectOption.textContent = strArr[idx]
+              selectOption.value = strArr[idx]
+              select.options.add(selectOption)
+            }
+            select.id = `${this.tpleditorCUID}_${index + 1}`
+          } else {
+            // 文本输入控件
+            ctrlType = 1
+            input.id = `${this.tpleditorCUID}_${index + 1}`
+          }
+
+          text = this.replaceStrByPos(
+            text,
+            TemplateItem.StartPosition - 1,
+            TemplateItem.EndPosition + 1,
+            ctrlType ? input.outerHTML : select.outerHTML
+          )
+
+          this.TemplateItemList.push(TemplateItem)
+        }
+
+        console.log('this.TemplateItemList////', this.TemplateItemList)
+
+        p.innerHTML = text
+
+        this.$refs[this.tpleditorCUID].$el.innerHTML = ''
+        this.$refs[this.tpleditorCUID].$el.appendChild(p)
+      }
+    },
+    replaceStrByPos (sourceStr, index, lastIndex, replaceStr) {
+      const newStr = `${sourceStr.substring(
+        0,
+        index
+      )}${replaceStr}${sourceStr.substring(lastIndex)}`
+      return newStr
     },
     keepLastIndex (obj) {
       if (window.getSelection) {
         // ie11 10 9 ff safari
         obj.focus() // 解决ff不获取焦点无法定位问题
         let range = window.getSelection() // 创建range
-        // if (range.anchorOffset !== 0) {
-        //   return
-        // }
         range.selectAllChildren(obj) // range 选择obj下所有子内容
         range.collapseToEnd() // 光标移至最后
       } else if (document.selection) {
         // ie10 9 8 7 6 5
         let range = document.selection.createRange() // 创建选择对象
-        // if (range.anchorOffset !== 0) {
-        //   return
-        // }
         // var range = document.body.createTextRange();
         range.moveToElementText(obj) // range定位到obj
         range.collapse(false) // 光标移至最后
@@ -122,31 +245,5 @@ export default {
 
 .ml-tpleditor:focus {
   outline: none;
-}
-
-.output {
-  font: 1rem "Fira Sans", sans-serif;
-}
-
-blockquote {
-  background: #eee;
-  border-radius: 5px;
-  margin: 16px 0;
-}
-
-blockquote p {
-  padding: 15px;
-}
-
-cite {
-  margin: 16px 32px;
-}
-
-blockquote p::before {
-  content: "\201C";
-}
-
-blockquote p::after {
-  content: "\201D";
 }
 </style>

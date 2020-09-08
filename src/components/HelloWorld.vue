@@ -13,8 +13,12 @@
       <ml-tpleditor
         v-model="DiagnosticTemplate"
         style="width: 100wh;"
-        @changex="handleTpleditorChange"
       />
+
+      <!-- <ml-tpleditor
+        v-model="DiagnosticTemplate"
+        style="width: 100wh;margin-top:20px;"
+      /> -->
     </div>
   </ml-scrollbar>
 </template>
@@ -32,7 +36,7 @@ export default {
     return {
       msg: '中：' + makePy('中', false),
       DiagnosticTemplate:
-          '2D+3D+MPR：双侧茎突走行未见异常，左侧长度为[_____]cm，右侧长度为[_____]。[_____]cm。茎突骨质未见异常。[abc;def;ghk; ]余未见异常改变。',
+          '2D+3D+MPR：双侧茎突走行未见异常，左侧长度为[_____]cm，右侧长度为[_____]cm。茎突骨质未见异常。[abc;def;ghk; ]未见异常改变。',
       //   DiagnosticTemplate: null,
       radioOptions: [
         { label: '啊123', value: 123 },
