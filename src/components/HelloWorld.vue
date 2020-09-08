@@ -31,9 +31,9 @@ export default {
   data () {
     return {
       msg: '中：' + makePy('中', false),
-      //   DiagnosticTemplate:
-      //     '2D+3D+MPR：双侧茎突走行未见异常，左侧长度为[_____]cm，右侧长度为[_____]。[_____]cm。茎突骨质未见异常。[abc;def;ghk; ]余未见异常改变。',
-      DiagnosticTemplate: null,
+      DiagnosticTemplate:
+          '2D+3D+MPR：双侧茎突走行未见异常，左侧长度为[_____]cm，右侧长度为[_____]。[_____]cm。茎突骨质未见异常。[abc;def;ghk; ]余未见异常改变。',
+      //   DiagnosticTemplate: null,
       radioOptions: [
         { label: '啊123', value: 123 },
         { label: '啊456', value: 456 }

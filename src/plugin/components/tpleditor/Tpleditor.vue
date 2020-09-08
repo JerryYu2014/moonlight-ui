@@ -46,12 +46,13 @@ export default {
     }
   },
   watch: {
-    // content (oldval, newval) {
-    //   this.compileTextToUI(newval)
-    // }
+    content (oldval, newval) {
+      //   this.compileTextToUI(newval)
+    }
   },
   mounted () {
     // console.log('props', this.$props)
+    this.$refs.tpleditor.$el.innerText = this.content
   },
   methods: {
     handleKeyup () {
