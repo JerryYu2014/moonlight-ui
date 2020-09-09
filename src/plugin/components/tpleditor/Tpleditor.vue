@@ -75,7 +75,9 @@ export default {
       }
     })
   },
-  destroyed () {},
+  destroyed () {
+    this.$refs[this.tpleditorCUID].$el.removeEventListener('paste')
+  },
   methods: {
     handleKeyup (env) {
       this.$emit(
