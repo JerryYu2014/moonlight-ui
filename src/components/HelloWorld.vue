@@ -10,10 +10,13 @@
 
       <div id="svg-compile"></div>
       <!-- :content="DiagnosticTemplate" -->
-      <div style="width:95%; height:40vh;border:1px solid #000;text-align:left;padding:20px;">
-        <ml-tpleditor v-model="DiagnosticTemplate" style="width: 90wh;" />
+      <div style="width:95%; height:50vh;border:1px solid #000;text-align:left;padding:20px;overflow:auto;">
+
+        <ml-tpleditor v-model="DiagnosticTemplate" style="width: 90wh;" @extract='handleExtract' />
+
         <ml-button size="large" type="error" @click="handleBtnClick">修改数据</ml-button>
-        <div><strong>提取的数据:</strong>{{DiagnosticTemplate}}</div>
+        <div><strong>模板数据:</strong>{{DiagnosticTemplate}}</div>
+        <div><strong>提取的数据:</strong>{{DiagnosticContent}}</div>
       </div>
 
       <!-- <ml-tpleditor
@@ -38,7 +41,8 @@ export default {
       msg: '中：' + makePy('中', false),
       DiagnosticTemplate:
         '2D+3D+MPR：双侧茎突走行未见异常，左侧长度为[_____]cm，右侧长度为[_____]cm。茎突骨质未见异常。[abc;def;ghk; ]未见异常改变。',
-      //   DiagnosticTemplate: null,
+      DiagnosticContent: '',
+      DiagnosticNewTemplate: '',
       radioOptions: [
         { label: '啊123', value: 123 },
         { label: '啊456', value: 456 }
@@ -47,7 +51,7 @@ export default {
   },
   watch: {
     DiagnosticTemplate () {
-      console.log('DiagnosticTemplate', this.DiagnosticTemplate)
+      //   console.log('DiagnosticTemplate', this.DiagnosticTemplate)
     }
   },
   mounted () {
@@ -61,13 +65,17 @@ export default {
     document.getElementById('svg-compile').innerHTML = svg
   },
   methods: {
-    handleTpleditorChange (content) {
-      console.log('content/content', content)
-      //   this.DiagnosticTemplate = content
+    handleExtract (data, template) {
+      //   console.log('content/content', data)
+      this.DiagnosticContent = data
+      this.DiagnosticNewTemplate = template
     },
     handleBtnClick () {
-      this.DiagnosticTemplate +=
+      this.DiagnosticTemplate =
+        this.DiagnosticNewTemplate +
         '2D+3D+MPR：双侧茎突走行未见异常，左侧长度为[ABC;123;+++]cm，右侧长度为[_____]cm。茎突骨质未见异常。[123;456;789; ]未见异常改变。'
+      //   this.DiagnosticTemplate +=
+      //     '2D+3D+MPR：双侧茎突走行未见异常，左侧长度为[ABC;123;+++]cm，右侧长度为[_____]cm。茎突骨质未见异常。[123;456;789; ]未见异常改变。'
     }
   }
 }
