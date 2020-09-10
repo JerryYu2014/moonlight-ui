@@ -16,8 +16,10 @@ export default {
       tpleditorCUID: `tpleditor_${new Date().getTime()}_${Math.floor(
         Math.random() * 1000
       )}`,
+      // 个模板编辑点的数据模型
       TemplateItemList: [],
       KeyupHandler: null,
+      // 缓存已输入的数据
       InputValues: []
     }
   },
@@ -52,6 +54,7 @@ export default {
   mounted () {
     this.compileTemplateToUI(this.content)
     this.handleKeyup()
+    // 对可编辑区域键盘按键弹起事件防抖动处理
     this.KeyupHandler = this.debounce(
       () => {
         this.handleKeyup()
@@ -108,7 +111,16 @@ export default {
         // if (i === 0) {
         //   source = element.Source
         // }
-        element.Values = document.getElementById(element.ElId).value
+
+        if (document.getElementById(element.ElId) instanceof HTMLInputElement) {
+          element.Values = document.getElementById(element.ElId).value
+        } else if (
+          document.getElementById(element.ElId) instanceof HTMLSelectElement
+        ) {
+          element.Values = document.getElementById(
+            element.ElId
+          ).nextElementSibling.value
+        }
 
         // if (
         //   document.getElementById(`${this.tpleditorCUID}_${i + 1}`) instanceof
@@ -157,7 +169,7 @@ export default {
       //     }
       //   }
 
-      //   console.log('source', source)
+      // console.log('source', source)
 
       return source
     },
@@ -168,7 +180,7 @@ export default {
         retTpl = retTpl.replace(element.Html, `[${element.Mark}]`)
       }
       retTpl = retTpl.replace(/<.*?>/g, '')
-      //   console.log('retTpl', retTpl)
+      // console.log('retTpl', retTpl)
       return retTpl
     },
     restoreToTemplateWithValue (htmlStr) {
@@ -181,7 +193,7 @@ export default {
         )
       }
       retTplWithValue = retTplWithValue.replace(/<.*?>/g, '')
-      //   console.log('retTplWithValue', retTplWithValue)
+      // console.log('retTplWithValue', retTplWithValue)
       return retTplWithValue
     },
     fillValues (htmlStr) {
@@ -216,11 +228,19 @@ export default {
         input.style =
           'width:50px;border:none;border-bottom:1px solid blue;outline: none;color: blue;text-align:center;'
 
+        const spanForSelect = document.createElement('span')
+        spanForSelect.style = 'position:relative;'
+
         const select = document.createElement('select')
         select.style =
           'width:80px;border:none;border-bottom:1px solid blue;outline: none;color: blue;'
 
+        const selectInput = document.createElement('input')
+        selectInput.style =
+          'width:62px;position:absolute;left:0px;height: 19px;border: none;outline: none;color: blue;text-align:center;'
+
         // console.log('0000', this.$refs[this.tpleditorCUID].$el.innerHTML)
+        // 移除可编辑区域中的dom，避免内存泄露
         for (let index = 0; index < this.TemplateItemList.length; index++) {
           const element = this.TemplateItemList[index]
           if (
@@ -230,7 +250,7 @@ export default {
           } else if (
             document.getElementById(element.ElId) instanceof HTMLSelectElement
           ) {
-            document.getElementById(element.ElId).remove()
+            document.getElementById(element.ElId).parentElement.remove()
           }
         }
         // console.log('1111', this.$refs[this.tpleditorCUID].$el.innerHTML)
@@ -272,7 +292,11 @@ export default {
             }
 
             select.id = `${this.tpleditorCUID}_${index + 1}`
-            TemplateItem.Html = select.outerHTML
+
+            spanForSelect.appendChild(select)
+            spanForSelect.appendChild(selectInput)
+
+            TemplateItem.Html = spanForSelect.outerHTML
           } else {
             // 文本控件
             ctrlType = 1
@@ -286,7 +310,7 @@ export default {
             tpl,
             TemplateItem.StartPosition - 1,
             TemplateItem.EndPosition + 1,
-            ctrlType ? input.outerHTML : select.outerHTML
+            ctrlType ? input.outerHTML : spanForSelect.outerHTML
           )
 
           this.TemplateItemList.push(TemplateItem)
@@ -319,22 +343,77 @@ export default {
           ) {
             if (this.InputValues[index]) {
               const splitArr = (element.Mark && element.Mark.split(';')) || []
-              let n
-              for (n = 0; n < splitArr.length; n++) {
+              let m = -1
+              for (let n = 0; n < splitArr.length; n++) {
                 const ele = splitArr[n]
                 if (ele === this.InputValues[index]) {
+                  m = n
                   break
                 }
               }
-              //   debugger
-              //   document.getElementById(element.ElId)[0].value = this.InputValues[index]
-              document.getElementById(element.ElId).selectedIndex = n
+              // document.getElementById(element.ElId)[0].value = this.InputValues[index]
+              document.getElementById(element.ElId).selectedIndex = m
+              document.getElementById(
+                element.ElId
+              ).nextElementSibling.value = this.InputValues[index]
+              this.TemplateItemList[index].Html = document.getElementById(
+                element.ElId
+              ).outerHTML
+            } else {
+              document.getElementById(element.ElId).selectedIndex = -1
               this.TemplateItemList[index].Html = document.getElementById(
                 element.ElId
               ).outerHTML
             }
-            document.getElementById(element.ElId).onchange = function () {
+
+            document.getElementById(element.ElId).onchange = function (e) {
+              //   console.log('nextElementSibling', this.nextElementSibling)
+              //   console.log('nextSibling', this.nextSibling)
+              this.nextElementSibling.value = e.target.value
+
+              // document.body.parentElement.nextElementSibling
+              // document.body.parentElement.nextSibling
+              // document.body.nextSibling
               self.handleKeyup()
+            }
+            // 选择器Tab 按键切换聚焦事件处理
+            document.getElementById(element.ElId).onfocus = function (env) {
+              //   debugger
+              if (document.all) {
+                // IE浏览器
+                document
+                  .getElementById(element.ElId)
+                  .nextElementSibling.focus()
+              } else {
+                // 其它浏览器
+                var e = document.createEvent('MouseEvents')
+                e.initEvent('focus', true, true)
+                document
+                  .getElementById(element.ElId)
+                  .nextElementSibling.dispatchEvent(e)
+              }
+            }
+            // 选择器-输入框聚焦事件处理
+            document.getElementById(
+              element.ElId
+            ).nextElementSibling.onfocus = function () {
+              //   debugger
+              if (document.all) {
+                // IE浏览器
+                document.getElementById(element.ElId).click()
+              } else {
+                // 其它浏览器
+                var e = document.createEvent('MouseEvents')
+                e.initEvent('select', true, true)
+                document.getElementById(element.ElId).dispatchEvent(e)
+              }
+            }
+            // 选择器-输入change 事件
+            document.getElementById(
+              element.ElId
+            ).nextElementSibling.onchange = function (e) {
+              //   console.log('e.target.value', e.target.value)
+              //   document.getElementById(element.ElId).value = e.target.value
             }
           }
         }
@@ -347,6 +426,7 @@ export default {
       )}${replaceStr}${sourceStr.substring(lastIndex)}`
       return newStr
     },
+    // 节流
     throttle (func, time) {
       let pre = 0
       let timer = null
@@ -363,6 +443,7 @@ export default {
         }
       }
     },
+    // 防抖
     debounce (func, time, immediate) {
       let timer = null
       return function (...args) {
