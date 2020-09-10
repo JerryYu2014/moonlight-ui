@@ -145,6 +145,11 @@ export default {
       // 输入数据替换模板标记
       source = this.fillValues(this.$refs[this.tpleditorCUID].$el.innerHTML)
 
+      // 可编辑区域为空时，清空已输入数据的缓存
+      if (!source) {
+        this.InputValues = []
+      }
+
       //   const regExp = new RegExp(/(?<=\[).*?(?=\])/g)
       //   for (let k = 0; k < this.TemplateItemList.length; k++) {
       //     const matchRegExp = this.TemplateItemList[0].Source.match(regExp)
@@ -367,47 +372,42 @@ export default {
             }
 
             document.getElementById(element.ElId).onchange = function (e) {
-              //   console.log('nextElementSibling', this.nextElementSibling)
-              //   console.log('nextSibling', this.nextSibling)
               this.nextElementSibling.value = e.target.value
-
-              // document.body.parentElement.nextElementSibling
-              // document.body.parentElement.nextSibling
-              // document.body.nextSibling
               self.handleKeyup()
             }
-            // 选择器Tab 按键切换聚焦事件处理
-            document.getElementById(element.ElId).onfocus = function (env) {
-              //   debugger
-              if (document.all) {
-                // IE浏览器
-                document
-                  .getElementById(element.ElId)
-                  .nextElementSibling.focus()
-              } else {
-                // 其它浏览器
-                var e = document.createEvent('MouseEvents')
-                e.initEvent('focus', true, true)
-                document
-                  .getElementById(element.ElId)
-                  .nextElementSibling.dispatchEvent(e)
-              }
-            }
-            // 选择器-输入框聚焦事件处理
-            document.getElementById(
-              element.ElId
-            ).nextElementSibling.onfocus = function () {
-              //   debugger
-              if (document.all) {
-                // IE浏览器
-                document.getElementById(element.ElId).click()
-              } else {
-                // 其它浏览器
-                var e = document.createEvent('MouseEvents')
-                e.initEvent('select', true, true)
-                document.getElementById(element.ElId).dispatchEvent(e)
-              }
-            }
+
+            // // 选择器Tab 按键切换聚焦事件处理
+            // document.getElementById(element.ElId).onfocus = function (e) {
+            //   if (document.all) {
+            //     // IE浏览器
+            //     document
+            //       .getElementById(element.ElId)
+            //       .nextElementSibling.focus()
+            //   } else {
+            //     // 其它浏览器
+            //     const env = document.createEvent('HTMLEvents')
+            //     env.initEvent('focus', false, true)
+            //     document
+            //       .getElementById(element.ElId)
+            //       .nextElementSibling.dispatchEvent(env)
+            //   }
+            // }
+
+            // // 选择器-输入框聚焦事件处理
+            // document.getElementById(
+            //   element.ElId
+            // ).nextElementSibling.onfocus = function () {
+            //   if (document.all) {
+            //     // IE浏览器
+            //     document.getElementById(element.ElId).click()
+            //   } else {
+            //     // 其它浏览器
+            //     var e = document.createEvent('MouseEvents')
+            //     e.initEvent('click', false, true)
+            //     document.getElementById(element.ElId).dispatchEvent(e)
+            //   }
+            // }
+
             // 选择器-输入change 事件
             document.getElementById(
               element.ElId
