@@ -9,6 +9,11 @@
       <ml-checkbox />-->
 
       <div id="svg-compile"></div>
+      <select>
+        <option value="德国">德国</option>
+        <option value="挪威">挪威</option>
+        <option value="瑞士">瑞士</option>
+      </select>
       <!-- :content="DiagnosticTemplate" -->
       <div style="width:95%; height:50vh;border:1px solid #000;text-align:left;padding:20px;overflow:auto;">
 
@@ -40,7 +45,7 @@ export default {
     return {
       msg: '中：' + makePy('中', false),
       DiagnosticTemplate:
-        '2D+3D+MPR：双侧茎突走行未见异常，左侧长度为[_____]cm，右侧长度为[_____]cm。茎突骨质未见异常。[abc;def;ghk; ]未见异常改变。',
+        '2D+3D+MPR：双侧茎突走行未见异常，左侧长度为[_________]cm，右侧长度为[_____]cm。茎突骨质未见异常。[abc;def;ghk; ]未见异常改变。',
       DiagnosticContent: '',
       DiagnosticNewTemplate: '',
       radioOptions: [
@@ -51,7 +56,7 @@ export default {
   },
   watch: {
     DiagnosticTemplate () {
-      //   console.log('DiagnosticTemplate', this.DiagnosticTemplate)
+      // console.log('DiagnosticTemplate', this.DiagnosticTemplate)
     }
   },
   mounted () {
@@ -66,7 +71,7 @@ export default {
   },
   methods: {
     handleExtract (data, template) {
-      //   console.log('content/content', data)
+      // console.log('content/content', data)
       this.DiagnosticContent = data
       this.DiagnosticNewTemplate = template
     },
@@ -98,4 +103,13 @@ li {
 a {
   color: #42b983;
 }
+
+/* select{
+    border: none;
+    border-bottom:1px solid blue ;
+}
+
+select:focus {
+  outline: 1px solid #afecab;
+} */
 </style>

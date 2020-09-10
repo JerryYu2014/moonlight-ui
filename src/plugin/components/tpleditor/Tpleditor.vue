@@ -20,7 +20,11 @@ export default {
       TemplateItemList: [],
       KeyupHandler: null,
       // 缓存已输入的数据
-      InputValues: []
+      InputValues: [],
+      // 输入框单位宽度
+      InputUnitWidth: 10,
+      // 选择框单位宽度
+      SelectUnitWidth: 20
     }
   },
   model: {
@@ -70,7 +74,7 @@ export default {
       let paste = (e.clipboardData || window.clipboardData).getData(
         'text/html'
       )
-      //   console.log('paste', paste)
+      // console.log('paste', paste)
 
       if (paste) {
         e.preventDefault()
@@ -79,7 +83,9 @@ export default {
     })
   },
   destroyed () {
-    this.$refs[this.tpleditorCUID].$el.removeEventListener('paste')
+    this.$refs[this.tpleditorCUID] &&
+      this.$refs[this.tpleditorCUID].$el &&
+      this.$refs[this.tpleditorCUID].$el.removeEventListener('paste')
   },
   methods: {
     handleKeyup (env) {
@@ -184,6 +190,7 @@ export default {
         const element = this.TemplateItemList[index]
         retTpl = retTpl.replace(element.Html, `[${element.Mark}]`)
       }
+      // 替换html 标签
       retTpl = retTpl.replace(/<.*?>/g, '')
       // console.log('retTpl', retTpl)
       return retTpl
@@ -197,6 +204,7 @@ export default {
           `[${element.Mark}|${element.Values}]`
         )
       }
+      // 替换html 标签
       retTplWithValue = retTplWithValue.replace(/<.*?>/g, '')
       // console.log('retTplWithValue', retTplWithValue)
       return retTplWithValue
@@ -207,15 +215,16 @@ export default {
         const element = this.TemplateItemList[index]
         retText = retText.replace(element.Html, element.Values)
       }
+      // 替换html 标签
       retText = retText.replace(/<.*?>/g, '')
       //   console.log('retText', retText)
       return retText
     },
     compileTemplateToUI (tpl) {
       const self = this
-      // 包含 []
+      // 匹配 [___]或[abc;def;] 字符串
       // const regExp1 = new RegExp(/\[.*?\]/gi)
-      // 不包含 []
+      // 匹配 [___]中[abc;def;] 中 [] 内的字符串（___ 或 abc;def;）
       const regExp2 = new RegExp(/(?<=\[).*?(?=\])/g)
 
       if (regExp2.test(tpl)) {
@@ -230,19 +239,21 @@ export default {
         const input = document.createElement('input')
         // input.className = 'ml-tpleditor-input'
         input.type = 'text'
-        input.style =
-          'width:50px;border:none;border-bottom:1px solid blue;outline: none;color: blue;text-align:center;'
+        // input.style =
+        //   'width:50px;border:none;border-bottom:1px solid blue;outline: none;color: blue;text-align:center;'
 
         const spanForSelect = document.createElement('span')
-        spanForSelect.style = 'position:relative;'
+        // spanForSelect.style = 'position:relative;width:80px;'
 
         const select = document.createElement('select')
-        select.style =
-          'width:80px;border:none;border-bottom:1px solid blue;outline: none;color: blue;'
+        // select.style =
+        //   'width:80px;border:none;border-bottom:1px solid blue;outline: none;color: blue;'
+        // 'width:80px;border:none;border-bottom:1px solid blue;outline: none;color: blue;'
 
         const selectInput = document.createElement('input')
-        selectInput.style =
-          'width:62px;position:absolute;left:0px;height: 19px;border: none;outline: none;color: blue;text-align:center;'
+        // selectInput.style =
+        //   'width:calc(80px - 18px);position:absolute;left:0px;height: 18px;border: none;outline: none;color: blue;text-align:center;'
+        // 'width:62px;position:absolute;left:0px;height: 18px;border: none;outline: none;color: blue;text-align:center;'
 
         // console.log('0000', this.$refs[this.tpleditorCUID].$el.innerHTML)
         // 移除可编辑区域中的dom，避免内存泄露
@@ -298,6 +309,21 @@ export default {
 
             select.id = `${this.tpleditorCUID}_${index + 1}`
 
+            const maxLengthStr = this.getMaxLenFromStrArr(strArr)
+
+            selectInput.style = `width:${
+              this.SelectUnitWidth * maxLengthStr - 18
+            }px;position:absolute;left:0px;height: 18px;border: none;outline: none;color: blue;text-align:center;`
+
+            select.style = `width:${
+              this.SelectUnitWidth * maxLengthStr
+            }px;border:none;border-bottom:1px solid blue;outline: none;color: blue;`
+            // select.size = 10
+
+            spanForSelect.style = `position:relative;width:${
+              this.SelectUnitWidth * maxLengthStr
+            }px;`
+
             spanForSelect.appendChild(select)
             spanForSelect.appendChild(selectInput)
 
@@ -307,6 +333,9 @@ export default {
             ctrlType = 1
 
             input.id = `${this.tpleditorCUID}_${index + 1}`
+            input.style = `width:${
+              this.InputUnitWidth * TemplateItem.Mark.length
+            }px;border:none;border-bottom:1px solid blue;outline: none;color: blue;text-align:center;`
             // input.setAttribute('value', '123')
             TemplateItem.Html = input.outerHTML
           }
@@ -328,7 +357,7 @@ export default {
         this.$refs[this.tpleditorCUID].$el.innerHTML = ''
         this.$refs[this.tpleditorCUID].$el.appendChild(p)
 
-        // 设置文本输入和选择控件已输入的数据；选择控件添加change事件监听
+        // 设置文本输入和选择控件已输入的数据；选择控件添加change 事件监听
         for (let index = 0; index < this.TemplateItemList.length; index++) {
           const element = this.TemplateItemList[index]
 
@@ -376,22 +405,46 @@ export default {
               self.handleKeyup()
             }
 
-            // // 选择器Tab 按键切换聚焦事件处理
-            // document.getElementById(element.ElId).onfocus = function (e) {
-            //   if (document.all) {
-            //     // IE浏览器
-            //     document
-            //       .getElementById(element.ElId)
-            //       .nextElementSibling.focus()
-            //   } else {
-            //     // 其它浏览器
-            //     const env = document.createEvent('HTMLEvents')
-            //     env.initEvent('focus', false, true)
-            //     document
-            //       .getElementById(element.ElId)
-            //       .nextElementSibling.dispatchEvent(env)
-            //   }
-            // }
+            // 选择器Tab 按键切换聚焦事件处理
+            document.getElementById(element.ElId).onfocus = function (e) {
+              //   e.target.nextElementSibling.focus()
+              //   if (document.all) {
+              //     // IE浏览器
+              //     document.getElementById(element.ElId).blur()
+              //     document
+              //       .getElementById(element.ElId)
+              //       .nextElementSibling.focus()
+              //   } else {
+              //     // 其它浏览器
+              //     const env1 = document.createEvent('HTMLEvents')
+              //     env1.initEvent('blur', false, true)
+              //     document.getElementById(element.ElId).dispatchEvent(env1)
+              //     const env = document.createEvent('HTMLEvents')
+              //     env.initEvent('focus', false, true)
+              //     document
+              //       .getElementById(element.ElId)
+              //       .nextElementSibling.dispatchEvent(env)
+              //   }
+            }
+
+            document.getElementById(element.ElId).onblur = function (env) {}
+
+            document.getElementById(
+              element.ElId
+            ).nextElementSibling.onkeydown = function (env) {
+              //   console.log('env', env)
+              //   document.getElementById(element.ElId).click()
+              //   if (document.all) {
+              //     // IE浏览器
+              //     document.getElementById(element.ElId).click()
+              //   } else {
+              //     // 其它浏览器
+              //     var e = document.createEvent('MouseEvents')
+              //     e.initEvent('click', false, true)
+              //     // e.initMouseEvent('click', true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null)
+              //     document.getElementById(element.ElId).dispatchEvent(e)
+              //   }
+            }
 
             // // 选择器-输入框聚焦事件处理
             // document.getElementById(
@@ -404,6 +457,7 @@ export default {
             //     // 其它浏览器
             //     var e = document.createEvent('MouseEvents')
             //     e.initEvent('click', false, true)
+            //     env.initMouseEvent('click', true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null)
             //     document.getElementById(element.ElId).dispatchEvent(e)
             //   }
             // }
@@ -456,6 +510,15 @@ export default {
         }, time)
       }
     },
+    getMaxLenFromStrArr (strArr) {
+      if (strArr && Array.isArray(strArr)) {
+        strArr.sort((pre, next) => next.length - pre.length)
+        if (strArr.length > 0) {
+          return strArr[0].length
+        }
+      }
+      return 0
+    },
     keepLastIndex (obj) {
       if (window.getSelection) {
         // ie11 10 9 ff safari
@@ -500,5 +563,13 @@ export default {
 
 .ml-tpleditor:focus {
   outline: none;
+}
+
+select:focus {
+  outline: 1px solid #afecab;
+}
+
+.ml-tpleditor >>> .select:focus {
+  outline: 1px solid #afecab;
 }
 </style>
