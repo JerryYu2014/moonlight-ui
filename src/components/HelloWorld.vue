@@ -30,6 +30,18 @@
         <span id="CreateSelect"></span>
       </p>
 
+      <div id="select" style="width: 100px;margin-top: 20px;box-sizing: border-box;position: relative;padding: 5px;">
+        <p style="width: 100%;;position: absolute;top: 0px;left: 0px;margin: 0px;border:none;border-bottom: 1px solid blue;">
+          <input id="select-input" type="text" style="width:calc(100% - 19px);left:0px;height: 18px;border: none;outline: none;padding: 0px;"><span id="select-arrow" style="-webkit-user-select: none;color:blue;">▼</span>
+        </p>
+        <!-- box-shadow: 10px 10px 5px #888888; -->
+        <ul id="select-list" style="position: absolute;top: 7px;left: 0px;z-index: 1000;background-color: white;width: calc(100% - 1px);padding: 0px;list-style-type: none; display: none;border: 1px solid blue; border-top: none;-webkit-user-select: none;">
+          <li style="width:100%" data-value="1">德国</li>
+          <li style="width:100%" data-value="2">挪威</li>
+          <li style="width:100%" data-value="3">瑞士</li>
+        </ul>
+      </div>
+
       <!-- <ml-tpleditor
         v-model="DiagnosticTemplate"
         style="width: 100wh;margin-top:20px;"
@@ -88,6 +100,60 @@ export default {
 
     document.getElementById('CreateSelect').appendChild(select)
     // document.getElementById('CreateSelect').innerHTML = select.outerHTML
+
+    /************************************************/
+
+    document.getElementById('select-input').onclick = function (e) {
+      // console.log(e.target)
+      // if (e.target.text === "▼") {
+      //     e.target.text = "▲"
+      // }
+      // else{
+      //     e.target.text = "▼"
+      // }
+      // document.body.innerText
+    }
+
+    document.getElementById('select-arrow').onclick = function (e) {
+      //   console.log(e.target.innerText)
+      if (e.target.innerText === '▼') {
+        e.target.innerText = '▲'
+      } else {
+        e.target.innerText = '▼'
+      }
+
+      if (document.getElementById('select-list').style.display === 'none') {
+        document.getElementById('select-list').style.display = 'block'
+      } else {
+        document.getElementById('select-list').style.display = 'none'
+      }
+    }
+
+    const selectItems = document.querySelectorAll('#select-list>li')
+
+    for (let index = 0; index < selectItems.length; index++) {
+      const element = selectItems[index]
+      element.onclick = function (e) {
+        console.log('e.target.innerText', e.target.innerText)
+        console.log('e.target.attributes', e.target.attributes['data-value'].value)
+      }
+      // document.body.onmouseleave
+      element.onmouseenter = function (e) {
+        e.target.style.color = '#fff'
+        e.target.style.backgroundColor = 'blue'
+      }
+      element.onmouseleave = function (e) {
+        e.target.style.color = '#000'
+        e.target.style.backgroundColor = '#fff'
+      }
+    }
+
+    // document.querySelector(':not(#select-arrow)').onclick = function () {
+    //   document.getElementById('select-arrow').innerText = '▼'
+    //   document.getElementById('select-list').style.display = 'none'
+    // }
+
+    /************************************************/
   },
   methods: {
     handleExtract (data, template) {
@@ -108,7 +174,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1,
+/* h1,
 h2 {
   font-weight: normal;
 }
@@ -122,7 +188,7 @@ li {
 }
 a {
   color: #42b983;
-}
+} */
 
 /* select{
     border: none;
