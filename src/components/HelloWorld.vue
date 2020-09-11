@@ -9,11 +9,13 @@
       <ml-checkbox />-->
 
       <div id="svg-compile"></div>
-      <select>
-        <option value="德国">德国</option>
-        <option value="挪威">挪威</option>
-        <option value="瑞士">瑞士</option>
-      </select>
+      <p>
+        <select>
+          <option value="德国">德国</option>
+          <option value="挪威">挪威</option>
+          <option value="瑞士">瑞士</option>
+        </select>
+      </p>
       <!-- :content="DiagnosticTemplate" -->
       <div style="width:95%; height:50vh;border:1px solid #000;text-align:left;padding:20px;overflow:auto;">
 
@@ -23,6 +25,10 @@
         <div><strong>模板数据:</strong>{{DiagnosticTemplate}}</div>
         <div><strong>提取的数据:</strong>{{DiagnosticContent}}</div>
       </div>
+
+      <p>
+        <span id="CreateSelect"></span>
+      </p>
 
       <!-- <ml-tpleditor
         v-model="DiagnosticTemplate"
@@ -68,6 +74,20 @@ export default {
     const svg = svgCompile(code)
     // console.log(svg)
     document.getElementById('svg-compile').innerHTML = svg
+
+    const select = document.createElement('select')
+    select.style =
+      'width: 60px;border:none;border-bottom:1px solid blue;outline: none;color: blue;'
+
+    for (let index = 0; index < 3; index++) {
+      const op = document.createElement('option')
+      op.value = index
+      op.label = `A${index + 1}`
+      select.options.add(op)
+    }
+
+    document.getElementById('CreateSelect').appendChild(select)
+    // document.getElementById('CreateSelect').innerHTML = select.outerHTML
   },
   methods: {
     handleExtract (data, template) {
