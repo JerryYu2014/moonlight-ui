@@ -94,6 +94,7 @@ export default {
         this.extractContentWithData(),
         this.restoreToTemplate(this.$refs[this.tpleditorCUID].$el.innerHTML)
       )
+      //   console.log('getSelection()', getSelection())
       //   console.log(
       //     'this.$refs[this.tpleditorCUID].$el.innerHTML',
       //     this.$refs[this.tpleditorCUID].$el.innerHTML
@@ -265,6 +266,7 @@ export default {
           // spanForSelect.style = 'position:relative;width:80px;'
 
           const select = document.createElement('select')
+          //   select.tabIndex = index
           // select.style =
           //   'width:80px;border:none;border-bottom:1px solid blue;outline: none;color: blue;'
           // 'width:80px;border:none;border-bottom:1px solid blue;outline: none;color: blue;'
@@ -306,6 +308,7 @@ export default {
             }
 
             select.id = `${this.tpleditorCUID}_${index + 1}`
+            // select.tabIndex = index
 
             const maxLengthStr = this.getMaxLenFromStrArr(strArr)
 
@@ -333,6 +336,7 @@ export default {
             input.style = `width:${
               this.InputUnitWidth * TemplateItem.Mark.length
             }px;border:none;border-bottom:1px solid #409eff;outline: none;color: #409eff;text-align:center;`
+            // input.tabIndex = index
 
             TemplateItem.Html = input.outerHTML
           }
@@ -572,5 +576,4 @@ select:focus {
 .ml-tpleditor >>> .select:focus {
   outline: 1px solid #afecab;
 }
-
 </style>
