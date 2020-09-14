@@ -1,5 +1,6 @@
 <template>
-  <Scrollbar :ref="tpleditorCUID" :id="tpleditorCUID" contenteditable class="ml-tpleditor" @keyup.native="KeyupHandler" />
+  <!-- @keyup.native="KeydownHandler" -->
+  <Scrollbar :ref="tpleditorCUID" :id="tpleditorCUID" contenteditable class="ml-tpleditor" @keydown.native="KeydownHandler" />
   <!-- v-model="content" -->
 </template>
 
@@ -18,13 +19,14 @@ export default {
       )}`,
       // 个模板编辑点的数据模型
       TemplateItemList: [],
-      KeyupHandler: null,
+      KeydownHandler: null,
       // 缓存已输入的数据
       InputValues: [],
       // 输入框单位宽度
       InputUnitWidth: 10,
       // 选择框单位宽度
-      SelectUnitWidth: 20
+      SelectUnitWidth: 20,
+      willTabOut: false
     }
   },
   model: {
@@ -52,18 +54,20 @@ export default {
   watch: {
     content (val, oldval) {
       this.compileTemplateToUI(val)
-      this.handleKeyup()
+      this.handleKeydown(null)
     }
   },
   mounted () {
     this.compileTemplateToUI(this.content)
-    this.handleKeyup()
+    this.handleKeydown(null)
+
     // 对可编辑区域键盘按键弹起事件防抖动处理
-    this.KeyupHandler = this.debounce(
-      () => {
-        this.handleKeyup()
+    this.KeydownHandler = this.debounce(
+      (env) => {
+        // console.log('env', env)
+        this.handleKeydown(env)
       },
-      500,
+      150,
       true
     )
     // 禁止黏贴 html
@@ -88,12 +92,55 @@ export default {
       this.$refs[this.tpleditorCUID].$el.removeEventListener('paste')
   },
   methods: {
-    handleKeyup (env) {
+    handleKeydown (env) {
       this.$emit(
         'extract',
         this.extractContentWithData(),
         this.restoreToTemplate(this.$refs[this.tpleditorCUID].$el.innerHTML)
       )
+
+      console.log('env', env)
+
+      if (env && env.key === 'Tab') {
+        // console.log('getSelection()', getSelection())
+        const selection = window.getSelection()
+        console.log('Tab-selection', selection)
+
+        const range = selection.getRangeAt(0)
+        console.log('Tab-range', range)
+
+        // document.getElementById(this.TemplateItemList[0].ElId).focus()
+        console.log('document.activeElement', document.activeElement)
+        // debugger
+        if (this.willTabOut) {
+          document.getElementById(this.TemplateItemList[0].ElId).focus()
+          this.willTabOut = false
+        }
+        if (
+          document.activeElement ===
+          document.getElementById(
+            this.TemplateItemList[this.TemplateItemList.length - 1].ElId
+          )
+        ) {
+          //   console.log(5555555555)
+          this.willTabOut = true
+        }
+      }
+
+      if (env && env.keyCode >= 37 && env.keyCode <= 40) {
+        // console.log('getSelection()', getSelection())
+        const selection = window.getSelection()
+        console.log('selection', selection)
+
+        const range = selection.getRangeAt(0)
+        console.log('range', range)
+
+        selection.setPosition(
+          document.getElementById(this.TemplateItemList[0].ElId).getRootNode(),
+          1
+        )
+      }
+
       //   console.log('getSelection()', getSelection())
       //   console.log(
       //     'this.$refs[this.tpleditorCUID].$el.innerHTML',
@@ -228,14 +275,14 @@ export default {
       // 匹配 [___]中[abc;def;] 中 [] 内的字符串（___ 或 abc;def;）
       const regExp2 = new RegExp(/(?<=\[).*?(?=\])/g)
 
+      const div = document.createElement('div')
+
       if (regExp2.test(tpl)) {
         // const matchRegExp1 = text.match(regExp1)
         // console.log('matchRegExp1', matchRegExp1)
 
         const matchRegExp2 = tpl.match(regExp2)
         // console.log('matchRegExp2', matchRegExp2)
-
-        const p = document.createElement('p')
 
         // console.log('0000', this.$refs[this.tpleditorCUID].$el.innerHTML)
         // 移除可编辑区域中的dom，避免内存泄露
@@ -259,6 +306,7 @@ export default {
           const input = document.createElement('input')
           // input.className = 'ml-tpleditor-input'
           input.type = 'text'
+          //   input.tabIndex = -1
           // input.style =
           //   'width:50px;border:none;border-bottom:1px solid blue;outline: none;color: blue;text-align:center;'
 
@@ -266,12 +314,13 @@ export default {
           // spanForSelect.style = 'position:relative;width:80px;'
 
           const select = document.createElement('select')
-          //   select.tabIndex = index
+          //   select.tabIndex = -1
           // select.style =
           //   'width:80px;border:none;border-bottom:1px solid blue;outline: none;color: blue;'
           // 'width:80px;border:none;border-bottom:1px solid blue;outline: none;color: blue;'
 
           const selectInput = document.createElement('input')
+          //   selectInput.tabIndex = -1
           // selectInput.style =
           //   'width:calc(80px - 18px);position:absolute;left:0px;height: 18px;border: none;outline: none;color: blue;text-align:center;'
           // 'width:62px;position:absolute;left:0px;height: 18px;border: none;outline: none;color: blue;text-align:center;'
@@ -353,10 +402,10 @@ export default {
 
         // console.log('this.TemplateItemList', this.TemplateItemList)
 
-        p.innerHTML = tpl
+        div.innerHTML = tpl
 
         this.$refs[this.tpleditorCUID].$el.innerHTML = ''
-        this.$refs[this.tpleditorCUID].$el.appendChild(p)
+        this.$refs[this.tpleditorCUID].$el.appendChild(div)
 
         // 设置文本输入和选择控件已输入的数据；选择控件添加change 事件监听
         for (let index = 0; index < this.TemplateItemList.length; index++) {
@@ -407,7 +456,7 @@ export default {
 
             document.getElementById(element.ElId).onchange = function (e) {
               this.nextElementSibling.value = e.target.value
-              self.handleKeyup()
+              self.handleKeydown()
             }
 
             // 选择器Tab 按键切换聚焦事件处理
@@ -475,7 +524,13 @@ export default {
             // }
           }
         }
+      } else {
+        div.innerHTML = tpl
+        this.$refs[this.tpleditorCUID].$el.innerHTML = ''
+        this.$refs[this.tpleditorCUID].$el.appendChild(div)
       }
+
+      console.log('this.TemplateItemList', this.TemplateItemList)
     },
     replaceStrByPos (sourceStr, index, lastIndex, replaceStr) {
       const newStr = `${sourceStr.substring(
