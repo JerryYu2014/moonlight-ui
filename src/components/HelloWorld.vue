@@ -9,13 +9,13 @@
       <ml-checkbox />-->
 
       <div id="svg-compile"></div>
-      <p>
+      <!-- <p>
         <select>
           <option value="德国">德国</option>
           <option value="挪威">挪威</option>
           <option value="瑞士">瑞士</option>
         </select>
-      </p>
+      </p> -->
       <!-- :content="DiagnosticTemplate" -->
       <div style="width:95%; height:50vh;border:1px solid #000;text-align:left;padding:20px;overflow:auto;">
 
@@ -34,12 +34,15 @@
         <p style="width: 100%;;position: absolute;top: 0px;left: 0px;margin: 0px;border:none;border-bottom: 1px solid blue;">
           <input id="select-input" type="text" style="width:calc(100% - 19px);left:0px;height: 18px;border: none;outline: none;padding: 0px;"><span id="select-arrow" style="-webkit-user-select: none;color:blue;">▼</span>
         </p>
-        <ul id="select-list" style="position: absolute;top: 4px;left: 0px;z-index: 1000;background-color: white;width: calc(100% - 1px);padding: 0px;list-style-type: none; display: none;border: 1px solid blue; border-top: none;-webkit-user-select: none;">
+        <ul id="select-list" style="position: absolute;top: 4px;left: 0px;z-index: 1000;background-color: white;width: calc(100% - 1px);padding: 0px;list-style-type: none; display: none;border: 1px solid blue; border-top: none;-webkit-user-select: none;text-align: left;">
           <li style="width:100%" data-value="1">德国</li>
           <li style="width:100%" data-value="2">挪威</li>
           <li style="width:100%" data-value="3">瑞士</li>
+          <li style="width:100%" data-value=" "> </li>
         </ul>
       </div>
+
+      <p style="text-align: left;">65asd6f51a32sd1f32a1sdf32</p>
 
       <!-- <ml-tpleditor
         v-model="DiagnosticTemplate"
@@ -61,10 +64,10 @@ export default {
   data () {
     return {
       msg: '中：' + makePy('中', false),
-      DiagnosticTemplate:
-        '2D+3D+MPR：双侧茎突走行未见异常，左侧长度为[_________]cm，右侧长度为[_____]cm。茎突骨质未见异常。[abc;def;ghk; ]未见异常改变。',
       //   DiagnosticTemplate:
-      //     '2D+3D+MPR：双侧茎突走行未见异常，左侧长度为cm，右侧长度为cm。茎突骨质未见异常。未见异常改变。',
+      //     '<input style="border:none;width:auto;" value="2D+3D+MPR：双侧茎突走行未见异常，左侧长度为" />[_________]<input style="border:none;width:auto;" value="cm，右侧长度为"/>[_____]<input style="border:none;width:auto;" value="cm。茎突骨质未见异常。" />[_____]<input style="border:none;width:auto;" value="未见异常改变。" />',
+      DiagnosticTemplate:
+          '2D+3D+MPR：双侧茎突走行未见异常，左侧长度为[_________]cm，右侧长度为[_____]cm。茎突骨质未见异常。[abc;def;ghk; ]未见异常改变。',
       DiagnosticContent: '',
       DiagnosticNewTemplate: '',
       radioOptions: [
@@ -111,6 +114,8 @@ export default {
     const selectList = document.getElementById('select-list')
     const selectItems = document.querySelectorAll('#select-list>li')
 
+    // const selectInputContinueClickCnt = 0
+
     selectInput.onclick = function (e) {
       if (selectArrow.innerText === '▼') {
         selectArrow.innerText = '▲'
@@ -128,29 +133,30 @@ export default {
     let keyboardSelectedIdx = 0
     selectInput.onkeydown = function (e) {
       if (e) {
+        let hasEntered = false
         switch (e.key) {
           case 'ArrowUp':
-            selectArrow.innerText = '▲'
-            selectList.style.display = 'block'
-            if (keyboardSelectedIdx > 0) {
+            if (selectList.style.display === 'block') {
               keyboardSelectedIdx--
-            } else {
-              keyboardSelectedIdx = selectItems.length
+              if (keyboardSelectedIdx < 0) {
+                keyboardSelectedIdx = selectItems.length - 1
+              }
             }
             break
           case 'ArrowDown':
-            selectArrow.innerText = '▲'
-            selectList.style.display = 'block'
-            if (keyboardSelectedIdx < selectItems.length) {
+            if (selectList.style.display === 'block') {
               keyboardSelectedIdx++
-            } else {
-              keyboardSelectedIdx = 0
+              if (keyboardSelectedIdx > selectItems.length - 1) {
+                keyboardSelectedIdx = 0
+              }
             }
             break
           case 'Enter':
             selectItems[keyboardSelectedIdx].click()
+            hasEntered = true
             break
         }
+
         const env = document.createEvent('MouseEvents')
         env.initEvent('mouseenter', false, true)
         selectItems[keyboardSelectedIdx].dispatchEvent(env)
@@ -160,6 +166,11 @@ export default {
           const ele = siblingEle[i]
           ele.style.color = '#000'
           ele.style.backgroundColor = '#fff'
+        }
+
+        if (!hasEntered && selectList.style.display === 'none') {
+          selectArrow.innerText = '▲'
+          selectList.style.display = 'block'
         }
       }
     }
@@ -180,12 +191,11 @@ export default {
 
     for (let index = 0; index < selectItems.length; index++) {
       const element = selectItems[index]
-      element.onkeydown = function (e) {
-        debugger
-        if (e.key === 'Enter') {
-          e.target.click()
-        }
-      }
+      //   element.onkeydown = function (e) {
+      //     if (e.key === 'Enter') {
+      //       e.target.click()
+      //     }
+      //   }
       element.onclick = function (e) {
         // console.log('e.target.innerText', e.target.innerText)
         // console.log(
@@ -211,6 +221,12 @@ export default {
       element.onmouseenter = function (e) {
         e.target.style.color = '#fff'
         e.target.style.backgroundColor = 'blue'
+        const siblingEle = self.sibling(e.target)
+        for (let i = 0; i < siblingEle.length; i++) {
+          const ele = siblingEle[i]
+          ele.style.color = '#000'
+          ele.style.backgroundColor = '#fff'
+        }
       }
       element.onmouseleave = function (e) {
         if (selectInput.value !== e.target.innerText) {

@@ -22,6 +22,7 @@ export default {
       KeydownHandler: null,
       // 缓存已输入的数据
       InputValues: [],
+      ActiveState: [],
       // 输入框单位宽度
       InputUnitWidth: 10,
       // 选择框单位宽度
@@ -102,44 +103,49 @@ export default {
       console.log('env', env)
 
       if (env && env.key === 'Tab') {
-        // console.log('getSelection()', getSelection())
-        const selection = window.getSelection()
-        console.log('Tab-selection', selection)
+        // // debugger
+        // // console.log('getSelection()', getSelection())
+        // const selection = window.getSelection()
+        // console.log('Tab-selection', selection)
 
-        const range = selection.getRangeAt(0)
-        console.log('Tab-range', range)
+        // const range = selection.getRangeAt(0)
+        // console.log('Tab-range', range)
 
-        // document.getElementById(this.TemplateItemList[0].ElId).focus()
-        console.log('document.activeElement', document.activeElement)
-        // debugger
+        // // document.getElementById(this.TemplateItemList[0].ElId).focus()
+        // console.log('document.activeElement', document.activeElement)
+        const firstChild = document.getElementById(
+          this.TemplateItemList[0].ElId
+        )
+        const lastChild = document.getElementById(
+          this.TemplateItemList[this.TemplateItemList.length - 1].ElId
+        )
+        // if (lastChild.getAttribute('data-type') === 'select') {
+        //   lastChild = lastChild.parentElement.parentElement
+        // }
         if (this.willTabOut) {
-          document.getElementById(this.TemplateItemList[0].ElId).focus()
+          firstChild.focus()
           this.willTabOut = false
         }
-        if (
-          document.activeElement ===
-          document.getElementById(
-            this.TemplateItemList[this.TemplateItemList.length - 1].ElId
-          )
-        ) {
+        // debugger
+        if (document.activeElement.id === lastChild.id) {
           //   console.log(5555555555)
           this.willTabOut = true
         }
       }
 
-      if (env && env.keyCode >= 37 && env.keyCode <= 40) {
-        // console.log('getSelection()', getSelection())
-        const selection = window.getSelection()
-        console.log('selection', selection)
+      //   if (env && env.keyCode >= 37 && env.keyCode <= 40) {
+      //     // console.log('getSelection()', getSelection())
+      //     const selection = window.getSelection()
+      //     console.log('selection', selection)
 
-        const range = selection.getRangeAt(0)
-        console.log('range', range)
+      //     const range = selection.getRangeAt(0)
+      //     console.log('range', range)
 
-        selection.setPosition(
-          document.getElementById(this.TemplateItemList[0].ElId).getRootNode(),
-          1
-        )
-      }
+      //     selection.setPosition(
+      //       document.getElementById(this.TemplateItemList[0].ElId).getRootNode(),
+      //       1
+      //     )
+      //   }
 
       //   console.log('getSelection()', getSelection())
       //   console.log(
@@ -194,7 +200,7 @@ export default {
 
         this.InputValues[i] = element.Values
       }
-      //   console.log('this.InputValues', this.InputValues)
+      // console.log('this.InputValues', this.InputValues)
 
       // 输入数据替换模板标记
       source = this.fillValues(this.$refs[this.tpleditorCUID].$el.innerHTML)
@@ -310,20 +316,23 @@ export default {
           // input.style =
           //   'width:50px;border:none;border-bottom:1px solid blue;outline: none;color: blue;text-align:center;'
 
-          const spanForSelect = document.createElement('span')
-          // spanForSelect.style = 'position:relative;width:80px;'
+          //   const spanForSelect = document.createElement('span')
+          //   // spanForSelect.style = 'position:relative;width:80px;'
 
-          const select = document.createElement('select')
-          //   select.tabIndex = -1
-          // select.style =
-          //   'width:80px;border:none;border-bottom:1px solid blue;outline: none;color: blue;'
-          // 'width:80px;border:none;border-bottom:1px solid blue;outline: none;color: blue;'
+          //   const select = document.createElement('select')
+          //   //   select.tabIndex = -1
+          //   // select.style =
+          //   //   'width:80px;border:none;border-bottom:1px solid blue;outline: none;color: blue;'
+          //   // 'width:80px;border:none;border-bottom:1px solid blue;outline: none;color: blue;'
 
-          const selectInput = document.createElement('input')
-          //   selectInput.tabIndex = -1
-          // selectInput.style =
-          //   'width:calc(80px - 18px);position:absolute;left:0px;height: 18px;border: none;outline: none;color: blue;text-align:center;'
-          // 'width:62px;position:absolute;left:0px;height: 18px;border: none;outline: none;color: blue;text-align:center;'
+          //   const selectInput = document.createElement('input')
+          //   //   selectInput.tabIndex = -1
+          //   // selectInput.style =
+          //   //   'width:calc(80px - 18px);position:absolute;left:0px;height: 18px;border: none;outline: none;color: blue;text-align:center;'
+          //   // 'width:62px;position:absolute;left:0px;height: 18px;border: none;outline: none;color: blue;text-align:center;'
+
+          const selectDiv = document.createElement('div')
+
           const arr = regExp2.exec(tpl)
 
           const TemplateItem = {
@@ -343,40 +352,85 @@ export default {
             // 选择框
             ctrlType = 0
 
-            if (select.options && select.options.length > 0) {
-              for (let idx = select.options.length - 1; idx >= 0; idx--) {
-                select.options.remove(idx)
-              }
-            }
-
-            for (let idx = 0; idx < strArr.length; idx++) {
-              const selectOption = document.createElement('option')
-              selectOption.value = strArr[idx]
-              selectOption.label = strArr[idx]
-              select.options.add(selectOption)
-            }
-
-            select.id = `${this.tpleditorCUID}_${index + 1}`
-            // select.tabIndex = index
-
             const maxLengthStr = this.getMaxLenFromStrArr(strArr)
 
-            selectInput.style = `width:${
-              this.SelectUnitWidth * maxLengthStr - 18
-            }px;position:absolute;left:0px;top:2px;padding:0;height: 15px;border: none;outline: none;color: #409eff;text-align:center;`
+            // if (select.options && select.options.length > 0) {
+            //   for (let idx = select.options.length - 1; idx >= 0; idx--) {
+            //     select.options.remove(idx)
+            //   }
+            // }
 
-            select.style = `width:${
+            // for (let idx = 0; idx < strArr.length; idx++) {
+            //   const selectOption = document.createElement('option')
+            //   selectOption.value = strArr[idx]
+            //   selectOption.label = strArr[idx]
+            //   select.options.add(selectOption)
+            // }
+
+            // select.id = `${this.tpleditorCUID}_${index + 1}`
+
+            // selectInput.style = `width:${
+            //   this.SelectUnitWidth * maxLengthStr - 18
+            // }px;position:absolute;left:0px;top:2px;padding:0;height: 15px;border: none;outline: none;color: #409eff;text-align:center;`
+
+            // select.style = `width:${
+            //   this.SelectUnitWidth * maxLengthStr
+            // }px;border:none;border-bottom:1px solid #409eff;outline: none;color: #409eff;`
+
+            // spanForSelect.style = `position:relative;width:${
+            //   this.SelectUnitWidth * maxLengthStr
+            // }px;`
+
+            // spanForSelect.appendChild(select)
+            // spanForSelect.appendChild(selectInput)
+            // TemplateItem.Html = spanForSelect.outerHTML
+
+            /******************************************************/
+            // debugger
+            selectDiv.id = `select-${this.tpleditorCUID}_${index + 1}`
+            selectDiv.style = `width: ${
               this.SelectUnitWidth * maxLengthStr
-            }px;border:none;border-bottom:1px solid #409eff;outline: none;color: #409eff;`
+            }px;height: 20px;box-sizing: border-box;position: relative;display:inline-block;`
 
-            spanForSelect.style = `position:relative;width:${
-              this.SelectUnitWidth * maxLengthStr
-            }px;`
+            const selectDivP = document.createElement('p')
+            selectDivP.style =
+              'width: 100%;;position: absolute;top: 0px;left: 0px;margin: 0px;border:none;border-bottom: 1px solid blue;margin-top: 2px;'
 
-            spanForSelect.appendChild(select)
-            spanForSelect.appendChild(selectInput)
+            const selectDivPIpt = document.createElement('input')
+            selectDivPIpt.id = `${this.tpleditorCUID}_${index + 1}`
 
-            TemplateItem.Html = spanForSelect.outerHTML
+            selectDivPIpt.style =
+              'width:calc(100% - 19px);left:0px;height: 18px;border: none;outline: none;padding: 0px;'
+            selectDivPIpt.type = 'text'
+            selectDivPIpt.setAttribute('data-type', 'select')
+
+            const selectDivPSpan = document.createElement('span')
+            // selectDivPSpan.id = `select-arrow-${this.tpleditorCUID}_${index + 1}`
+            selectDivPSpan.style =
+              '-webkit-user-select: none;color:blue;font-size:14px;'
+            selectDivPSpan.innerText = '▼'
+
+            const selectDivUl = document.createElement('ul')
+            selectDivUl.style =
+              'position: absolute;top: 7px;left: 0px;z-index: 1000;background-color: white;width: calc(100% - 2px);padding: 0px;list-style-type: none; display: none;border: 1px solid blue; border-top: none;-webkit-user-select: none;text-align: left;'
+
+            const selectItems = []
+            for (let idx = 0; idx < strArr.length; idx++) {
+              const selectDivUlli = document.createElement('li')
+              selectDivUlli.style = 'width:100%;height:18.4px;'
+              selectDivUlli.innerText = strArr[idx]
+              selectDivUlli.setAttribute('data-value', strArr[idx])
+              selectItems.push(selectDivUlli)
+              selectDivUl.appendChild(selectDivUlli)
+            }
+
+            selectDivP.appendChild(selectDivPIpt)
+            selectDivP.appendChild(selectDivPSpan)
+
+            selectDiv.appendChild(selectDivP)
+            selectDiv.appendChild(selectDivUl)
+
+            TemplateItem.Html = selectDiv.outerHTML
           } else {
             // 文本框
             ctrlType = 1
@@ -394,7 +448,8 @@ export default {
             tpl,
             TemplateItem.StartPosition - 1,
             TemplateItem.EndPosition + 1,
-            ctrlType ? input.outerHTML : spanForSelect.outerHTML
+            // ctrlType ? input.outerHTML : spanForSelect.outerHTML
+            ctrlType ? input.outerHTML : selectDiv.outerHTML
           )
 
           this.TemplateItemList.push(TemplateItem)
@@ -410,21 +465,180 @@ export default {
         // 设置文本输入和选择控件已输入的数据；选择控件添加change 事件监听
         for (let index = 0; index < this.TemplateItemList.length; index++) {
           const element = this.TemplateItemList[index]
+          const tagEle = document.getElementById(element.ElId)
 
-          if (
-            document.getElementById(element.ElId) instanceof HTMLInputElement
-          ) {
+          if (tagEle instanceof HTMLInputElement) {
             if (this.InputValues[index]) {
-              document
-                .getElementById(element.ElId)
-                .setAttribute('value', this.InputValues[index])
-              this.TemplateItemList[index].Html = document.getElementById(
-                element.ElId
-              ).outerHTML
+              tagEle.setAttribute('value', this.InputValues[index])
+              this.TemplateItemList[index].Html = tagEle.outerHTML
             }
-          } else if (
-            document.getElementById(element.ElId) instanceof HTMLSelectElement
-          ) {
+
+            if (tagEle.getAttribute('data-type', 'select')) {
+              const selectDiv = tagEle.parentElement.parentElement
+              const selectDivPIpt = tagEle
+              const selectDivPSpan = tagEle.nextElementSibling
+              const selectDivUl = tagEle.parentElement.nextElementSibling
+              const selectItems = selectDivUl.children
+
+              selectDivPIpt.onclick = function (e) {
+                if (selectDivPSpan.innerText === '▼') {
+                  selectDivPSpan.innerText = '▲'
+                } else {
+                  selectDivPSpan.innerText = '▼'
+                }
+
+                if (selectDivUl.style.display === 'none') {
+                  selectDivUl.style.display = 'block'
+                } else {
+                  selectDivUl.style.display = 'none'
+                }
+              }
+
+              let keyboardSelectedIdx = 0
+              selectDivPIpt.onkeydown = function (e) {
+                e.stopPropagation()
+
+                if (
+                  e &&
+                  (e.key === 'ArrowUp' ||
+                    e.key === 'ArrowDown' ||
+                    e.key === 'Enter')
+                ) {
+                  let hasEntered = false
+                  switch (e.key) {
+                    case 'ArrowUp':
+                      if (selectDivUl.style.display === 'block') {
+                        keyboardSelectedIdx--
+                        if (keyboardSelectedIdx < 0) {
+                          keyboardSelectedIdx = selectItems.length - 1
+                        }
+                      }
+                      break
+                    case 'ArrowDown':
+                      if (selectDivUl.style.display === 'block') {
+                        keyboardSelectedIdx++
+                        if (keyboardSelectedIdx > selectItems.length - 1) {
+                          keyboardSelectedIdx = 0
+                        }
+                      }
+                      break
+                    case 'Enter':
+                      selectItems[keyboardSelectedIdx].click()
+                      hasEntered = true
+                      break
+                    default:
+                    //   e.preventDefault()
+                    //   return false
+                  }
+
+                  const env = document.createEvent('MouseEvents')
+                  env.initEvent('mouseenter', false, true)
+                  selectItems[keyboardSelectedIdx].dispatchEvent(env)
+
+                  const siblingEle = self.sibling(
+                    selectItems[keyboardSelectedIdx]
+                  )
+                  for (let i = 0; i < siblingEle.length; i++) {
+                    const ele = siblingEle[i]
+                    ele.style.color = '#000'
+                    ele.style.backgroundColor = '#fff'
+                  }
+
+                  if (!hasEntered && selectDivUl.style.display === 'none') {
+                    selectDivPSpan.innerText = '▲'
+                    selectDivUl.style.display = 'block'
+                  }
+                } else if (e.key === 'Tab') {
+                  e.preventDefault()
+                  return false
+                }
+              }
+
+              selectDivPSpan.onclick = function (e) {
+                if (e.target.innerText === '▼') {
+                  e.target.innerText = '▲'
+                } else {
+                  e.target.innerText = '▼'
+                }
+
+                if (selectDivUl.style.display === 'none') {
+                  selectDivUl.style.display = 'block'
+                } else {
+                  selectDivUl.style.display = 'none'
+                }
+              }
+
+              for (let index = 0; index < selectItems.length; index++) {
+                const siEle = selectItems[index]
+                //   siEle.onkeydown = function (e) {
+                //     if (e.key === 'Enter') {
+                //       e.target.click()
+                //     }
+                //   }
+                siEle.onclick = function (e) {
+                  // console.log('e.target.innerText', e.target.innerText)
+                  // console.log(
+                  //   'e.target.attributes.data-value',
+                  //   e.target.attributes['data-value'].value
+                  // )
+
+                  selectDivPIpt.value = e.target.innerText
+
+                  selectDivUl.style.display = 'none'
+                  selectDivPSpan.innerText = '▼'
+
+                  e.target.style.color = '#fff'
+                  e.target.style.backgroundColor = 'blue'
+
+                  const siblingEle = self.sibling(e.target)
+                  for (let i = 0; i < siblingEle.length; i++) {
+                    const ele = siblingEle[i]
+                    ele.style.color = '#000'
+                    ele.style.backgroundColor = '#fff'
+                  }
+                }
+                siEle.onmouseenter = function (e) {
+                  e.target.style.color = '#fff'
+                  e.target.style.backgroundColor = 'blue'
+                  const siblingEle = self.sibling(e.target)
+                  for (let i = 0; i < siblingEle.length; i++) {
+                    const ele = siblingEle[i]
+                    ele.style.color = '#000'
+                    ele.style.backgroundColor = '#fff'
+                  }
+                }
+                siEle.onmouseleave = function (e) {
+                  if (selectDivPIpt.value !== e.target.innerText) {
+                    e.target.style.color = '#000'
+                    e.target.style.backgroundColor = '#fff'
+                  }
+                }
+              }
+
+              document.onclick = function (e) {
+                // 事件对象，兼容IE
+                const env = e || window.event
+                // 源对象，兼容火狐和IE
+                let target = env.target || env.srcElement
+                debugger
+                while (target) {
+                  // 循环判断至根节点，防止点击的是#select 和它的子元素
+                  if (target === selectDiv) {
+                    return
+                  }
+                  target = target.parentNode
+                }
+                selectDivUl.style.display = 'none'
+                selectDivPSpan.innerText = '▼'
+              }
+            } else {
+              tagEle.onkeydown = function (e) {
+                if (e.key === 'Tab') {
+                  e.preventDefault()
+                }
+              }
+            }
+          } else if (tagEle instanceof HTMLSelectElement) {
             if (this.InputValues[index]) {
               const splitArr = (element.Mark && element.Mark.split(';')) || []
               let m = -1
@@ -436,31 +650,25 @@ export default {
                 }
               }
               // document.getElementById(element.ElId)[0].value = this.InputValues[index]
-              document.getElementById(element.ElId).selectedIndex = m
-              document.getElementById(
-                element.ElId
-              ).nextElementSibling.value = this.InputValues[index]
-              this.TemplateItemList[index].Html = document.getElementById(
-                element.ElId
-              ).outerHTML
+              tagEle.selectedIndex = m
+              tagEle.nextElementSibling.value = this.InputValues[index]
+              this.TemplateItemList[index].Html = tagEle.outerHTML
             } else {
-              document.getElementById(element.ElId).selectedIndex = -1
-              this.TemplateItemList[index].Html = document.getElementById(
-                element.ElId
-              ).outerHTML
+              tagEle.selectedIndex = -1
+              this.TemplateItemList[index].Html = tagEle.outerHTML
             }
 
-            document.getElementById(element.ElId).onclick = function (e) {
+            tagEle.onclick = function (e) {
               console.log('e', e)
             }
 
-            document.getElementById(element.ElId).onchange = function (e) {
+            tagEle.onchange = function (e) {
               this.nextElementSibling.value = e.target.value
               self.handleKeydown()
             }
 
             // 选择器Tab 按键切换聚焦事件处理
-            document.getElementById(element.ElId).onfocus = function (e) {
+            tagEle.onfocus = function (e) {
               //   e.target.nextElementSibling.focus()
               e.target.style.outline = '1px solid #409eff'
               //   console.log('e.target-1', e.target)
@@ -484,15 +692,13 @@ export default {
               //   }
             }
 
-            document.getElementById(element.ElId).onblur = function (e) {
+            tagEle.onblur = function (e) {
               e.target.style.outline = 'none'
               //   console.log('e.target-2', e.target)
               element.Html = e.target.outerHTML
             }
 
-            document.getElementById(
-              element.ElId
-            ).nextElementSibling.onkeydown = function (env) {
+            tagEle.nextElementSibling.onkeydown = function (env) {
               //   console.log('env', env)
               //   document.getElementById(element.ElId).click()
               //   if (document.all) {
@@ -531,6 +737,14 @@ export default {
       }
 
       console.log('this.TemplateItemList', this.TemplateItemList)
+    },
+    sibling (elm) {
+      var a = []
+      var p = elm.parentNode.children
+      for (var i = 0, pl = p.length; i < pl; i++) {
+        if (p[i] !== elm) a.push(p[i])
+      }
+      return a
     },
     replaceStrByPos (sourceStr, index, lastIndex, replaceStr) {
       const newStr = `${sourceStr.substring(
@@ -577,6 +791,20 @@ export default {
         }
       }
       return 0
+    },
+    getCursortPosition (obj) {
+      var cursorIndex = 0
+      if (document.selection) {
+        // IE Support
+        obj.focus()
+        var range = document.selection.createRange()
+        range.moveStart('character', -obj.value.length)
+        cursorIndex = range.text.length
+      } else if (obj.selectionStart || obj.selectionStart === 0) {
+        // another support
+        cursorIndex = obj.selectionStart
+      }
+      return cursorIndex
     },
     keepLastIndex (obj) {
       if (window.getSelection) {
