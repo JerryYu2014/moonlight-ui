@@ -1,6 +1,6 @@
 <template>
   <ml-scrollbar style="width:100%;height:98vh;overflow:auto;">
-    <div style="width: 100%;height: 150vh;text-align: center;">
+    <div style="width: 100%;height: 110vh;">
       <!-- <h1>{{ msg }}</h1> -->
 
       <!-- <ml-button size="large" type="error">NICE</ml-button>
@@ -30,11 +30,11 @@
         <span id="CreateSelect"></span>
       </p>
 
-      <div id="select" style="width: 100px;margin-top: 20px;box-sizing: border-box;position: relative;padding: 5px;">
+      <div id="select" style="width: 100px;margin-top: 20px;box-sizing: border-box;position: relative;padding: 5px;display:inline-block;">
         <p style="width: 100%;;position: absolute;top: 0px;left: 0px;margin: 0px;border:none;border-bottom: 1px solid blue;">
           <input id="select-input" type="text" style="width:calc(100% - 19px);left:0px;height: 18px;border: none;outline: none;padding: 0px;"><span id="select-arrow" style="-webkit-user-select: none;color:blue;">▼</span>
         </p>
-        <ul id="select-list" style="position: absolute;top: 4px;left: 0px;z-index: 1000;background-color: white;width: calc(100% - 1px);padding: 0px;list-style-type: none; display: none;border: 1px solid blue; border-top: none;-webkit-user-select: none;text-align: left;">
+        <ul id="select-list" style="position: absolute;top: 5px;left: 0px;z-index: 1000;background-color: white;width: calc(100% - 2px);padding: 0px;list-style-type: none; display: none;border: 1px solid blue; border-top: none;-webkit-user-select: none;text-align: left;">
           <li style="width:100%" data-value="1">德国</li>
           <li style="width:100%" data-value="2">挪威</li>
           <li style="width:100%" data-value="3">瑞士</li>
@@ -42,22 +42,16 @@
         </ul>
       </div>
 
-      <p style="text-align: left;">65asd6f51a32sd1f32a1sdf32</p>
-
-      <!-- <ml-tpleditor
-        v-model="DiagnosticTemplate"
-        style="width: 100wh;margin-top:20px;"
-      /> -->
     </div>
   </ml-scrollbar>
 </template>
 
 <script>
 import { makePy } from 'moonlight-utils'
-import {
-  // bubbleSort,
-  svgCompile
-} from 'moonlight-algorithm'
+// import {
+//   // bubbleSort,
+//   svgCompile
+// } from 'moonlight-algorithm'
 
 export default {
   name: 'HelloWorld',
@@ -83,27 +77,26 @@ export default {
   },
   mounted () {
     const self = this
-    // console.log(bubbleSort([2, 3, 9]))
 
-    // 调用svgCompile编译器
-    const code = 'Paper 0 Pen 100 Line 0 50 100 50'
-    // const code = 'Paper 0 Pen 100 Line 0 50 100 100'
-    const svg = svgCompile(code)
-    // console.log(svg)
-    document.getElementById('svg-compile').innerHTML = svg
+    // // 调用svgCompile编译器
+    // const code = 'Paper 0 Pen 100 Line 0 50 100 50'
+    // // const code = 'Paper 0 Pen 100 Line 0 50 100 100'
+    // const svg = svgCompile(code)
+    // // console.log(svg)
+    // document.getElementById('svg-compile').innerHTML = svg
 
-    const select = document.createElement('select')
-    select.style =
-      'width: 60px;border:none;border-bottom:1px solid blue;outline: none;color: blue;'
+    // const select = document.createElement('select')
+    // select.style =
+    //   'width: 60px;border:none;border-bottom:1px solid blue;outline: none;color: blue;'
 
-    for (let index = 0; index < 3; index++) {
-      const op = document.createElement('option')
-      op.value = index
-      op.label = `A${index + 1}`
-      select.options.add(op)
-    }
+    // for (let index = 0; index < 3; index++) {
+    //   const op = document.createElement('option')
+    //   op.value = index
+    //   op.label = `A${index + 1}`
+    //   select.options.add(op)
+    // }
 
-    document.getElementById('CreateSelect').appendChild(select)
+    // document.getElementById('CreateSelect').appendChild(select)
     // document.getElementById('CreateSelect').innerHTML = select.outerHTML
 
     /************************************************/
