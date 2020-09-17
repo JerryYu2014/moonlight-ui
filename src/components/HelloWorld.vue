@@ -35,10 +35,10 @@
           <input id="select-input" type="text" style="width:calc(100% - 19px);left:0px;height: 18px;border: none;outline: none;padding: 0px;"><span id="select-arrow" style="-webkit-user-select: none;color:blue;">▼</span>
         </p>
         <ul id="select-list" style="position: absolute;top: 5px;left: 0px;z-index: 1000;background-color: white;width: calc(100% - 2px);padding: 0px;list-style-type: none; display: none;border: 1px solid blue; border-top: none;-webkit-user-select: none;text-align: left;">
-          <li style="width:100%" data-value="1">德国</li>
-          <li style="width:100%" data-value="2">挪威</li>
-          <li style="width:100%" data-value="3">瑞士</li>
-          <li style="width:100%" data-value=" "> </li>
+          <li style="width:100%;height:18.4px;" data-value="1">德国</li>
+          <li style="width:100%;height:18.4px;" data-value="2">挪威</li>
+          <li style="width:100%;height:18.4px;" data-value="3">瑞士</li>
+          <li style="width:100%;height:18.4px;" data-value=" "> </li>
         </ul>
       </div>
 
@@ -61,7 +61,7 @@ export default {
       //   DiagnosticTemplate:
       //     '<input style="border:none;width:auto;" value="2D+3D+MPR：双侧茎突走行未见异常，左侧长度为" />[_________]<input style="border:none;width:auto;" value="cm，右侧长度为"/>[_____]<input style="border:none;width:auto;" value="cm。茎突骨质未见异常。" />[_____]<input style="border:none;width:auto;" value="未见异常改变。" />',
       DiagnosticTemplate:
-          '2D+3D+MPR：双侧茎突走行未见异常，左侧长度为[_________]cm，右侧长度为[_____]cm。茎突骨质未见异常。[abc;def;ghk; ]未见异常改变。',
+        '2D+3D+MPR：双侧茎突走行未见异常，左侧长度为[_________]cm，右侧长度为[_____]cm。茎突骨质未见异常。[abc;def;ghk; ]未见异常改变。',
       DiagnosticContent: '',
       DiagnosticNewTemplate: '',
       radioOptions: [
@@ -85,22 +85,26 @@ export default {
     // // console.log(svg)
     // document.getElementById('svg-compile').innerHTML = svg
 
-    // const select = document.createElement('select')
-    // select.style =
-    //   'width: 60px;border:none;border-bottom:1px solid blue;outline: none;color: blue;'
+    /************************************************/
 
-    // for (let index = 0; index < 3; index++) {
-    //   const op = document.createElement('option')
-    //   op.value = index
-    //   op.label = `A${index + 1}`
-    //   select.options.add(op)
-    // }
+    // input + select 实现自定义下拉框
+    const select = document.createElement('select')
+    select.style =
+      'width: 60px;border:none;border-bottom:1px solid blue;outline: none;color: blue;'
 
-    // document.getElementById('CreateSelect').appendChild(select)
-    // document.getElementById('CreateSelect').innerHTML = select.outerHTML
+    for (let index = 0; index < 3; index++) {
+      const op = document.createElement('option')
+      op.value = index
+      op.label = `A${index + 1}`
+      select.options.add(op)
+    }
+
+    document.getElementById('CreateSelect').appendChild(select)
+    document.getElementById('CreateSelect').innerHTML = select.outerHTML
 
     /************************************************/
 
+    // input + ul 实现自定义下拉框
     // const selectX = document.getElementById('select')
     const selectInput = document.getElementById('select-input')
     const selectArrow = document.getElementById('select-arrow')
@@ -125,7 +129,12 @@ export default {
 
     let keyboardSelectedIdx = 0
     selectInput.onkeydown = function (e) {
-      if (e) {
+      e.stopPropagation()
+
+      if (
+        e &&
+        (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'Enter')
+      ) {
         let hasEntered = false
         switch (e.key) {
           case 'ArrowUp':
@@ -165,6 +174,9 @@ export default {
           selectArrow.innerText = '▲'
           selectList.style.display = 'block'
         }
+      } else if (e.key === 'Tab') {
+        //   e.preventDefault()
+        //   return false
       }
     }
 
