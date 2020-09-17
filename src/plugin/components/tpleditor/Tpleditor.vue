@@ -1,7 +1,5 @@
 <template>
-  <!-- @keyup.native="KeydownHandler" -->
   <Scrollbar :ref="tpleditorCUID" :id="tpleditorCUID" contenteditable class="ml-tpleditor" @keydown.native="KeydownHandler" />
-  <!-- v-model="content" -->
 </template>
 
 <script>
@@ -65,7 +63,6 @@ export default {
     // 对可编辑区域键盘按键弹起事件防抖动处理
     this.KeydownHandler = this.debounce(
       (env) => {
-        // console.log('env', env)
         this.handleKeydown(env)
       },
       150,
@@ -73,13 +70,11 @@ export default {
     )
     // 禁止黏贴 html
     this.$refs[this.tpleditorCUID].$el.addEventListener('paste', function (e) {
-      // e.preventDefault()
       e.stopPropagation()
 
       let paste = (e.clipboardData || window.clipboardData).getData(
         'text/html'
       )
-      // console.log('paste', paste)
 
       if (paste) {
         e.preventDefault()
@@ -100,35 +95,20 @@ export default {
         this.restoreToTemplate(this.$refs[this.tpleditorCUID].$el.innerHTML)
       )
 
-      console.log('env', env)
+      // console.log('env', env)
 
       if (env && env.key === 'Tab') {
-        // // debugger
-        // // console.log('getSelection()', getSelection())
-        // const selection = window.getSelection()
-        // console.log('Tab-selection', selection)
-
-        // const range = selection.getRangeAt(0)
-        // console.log('Tab-range', range)
-
-        // // document.getElementById(this.TemplateItemList[0].ElId).focus()
-        // console.log('document.activeElement', document.activeElement)
         const firstChild = document.getElementById(
           this.TemplateItemList[0].ElId
         )
         const lastChild = document.getElementById(
           this.TemplateItemList[this.TemplateItemList.length - 1].ElId
         )
-        // if (lastChild.getAttribute('data-type') === 'select') {
-        //   lastChild = lastChild.parentElement.parentElement
-        // }
         if (this.willTabOut) {
           firstChild.focus()
           this.willTabOut = false
         }
-        // debugger
         if (document.activeElement.id === lastChild.id) {
-          //   console.log(5555555555)
           this.willTabOut = true
         }
       }
@@ -137,10 +117,8 @@ export default {
       //     // console.log('getSelection()', getSelection())
       //     const selection = window.getSelection()
       //     console.log('selection', selection)
-
       //     const range = selection.getRangeAt(0)
       //     console.log('range', range)
-
       //     selection.setPosition(
       //       document.getElementById(this.TemplateItemList[0].ElId).getRootNode(),
       //       1
@@ -148,19 +126,6 @@ export default {
       //   }
 
       //   console.log('getSelection()', getSelection())
-      //   console.log(
-      //     'this.$refs[this.tpleditorCUID].$el.innerHTML',
-      //     this.$refs[this.tpleditorCUID].$el.innerHTML
-      //   )
-
-      //   this.$emit(
-      //     'change',
-      //     this.restoreToTemplate(this.$refs[this.tpleditorCUID].$el.innerHTML)
-      //   )
-      //   console.log(
-      //     'this.$refs[this.tpleditorCUID].$el.textContent',
-      //     this.$refs[this.tpleditorCUID].$el.textContent
-      //   )
     },
     extractContentWithData () {
       let source = this.content
@@ -168,9 +133,6 @@ export default {
       // 获取输入控件中的数据
       for (let i = 0; i < this.TemplateItemList.length; i++) {
         const element = this.TemplateItemList[i]
-        // if (i === 0) {
-        //   source = element.Source
-        // }
 
         if (document.getElementById(element.ElId) instanceof HTMLInputElement) {
           element.Values = document.getElementById(element.ElId).value
@@ -182,25 +144,8 @@ export default {
           ).nextElementSibling.value
         }
 
-        // if (
-        //   document.getElementById(`${this.tpleditorCUID}_${i + 1}`) instanceof
-        //   HTMLInputElement
-        // ) {
-        //   this.InputValues[i] = element.Values
-        // } else if (
-        //   document.getElementById(`${this.tpleditorCUID}_${i + 1}`) instanceof
-        //   HTMLSelectElement
-        // ) {
-        //   const arr = element.Mark.split(';')
-        //   for (let n = 0; n < arr.length; n++) {
-        //     const ele = arr[n]
-        //     if(ele===)
-        //   }
-        // }
-
         this.InputValues[i] = element.Values
       }
-      // console.log('this.InputValues', this.InputValues)
 
       // 输入数据替换模板标记
       source = this.fillValues(this.$refs[this.tpleditorCUID].$el.innerHTML)
@@ -209,32 +154,6 @@ export default {
       if (!source) {
         this.InputValues = []
       }
-
-      //   const regExp = new RegExp(/(?<=\[).*?(?=\])/g)
-      //   for (let k = 0; k < this.TemplateItemList.length; k++) {
-      //     const matchRegExp = this.TemplateItemList[0].Source.match(regExp)
-      //     if (matchRegExp) {
-      //       for (let j = 0; j < matchRegExp.length; j++) {
-      //         // const element = matchRegExp[j]
-      //         if (j === k) {
-      //           const arr = regExp.exec(source)
-      //           this.TemplateItemList[j].Mark = arr[0]
-      //           this.TemplateItemList[j].Source = arr.input
-      //           this.TemplateItemList[j].StartPosition = arr.index
-      //           this.TemplateItemList[j].EndPosition = arr.index + arr[0].length
-      //           const ex = this.TemplateItemList[k]
-      //           source = this.replaceStrByPos(
-      //             source,
-      //             ex.StartPosition - 1,
-      //             ex.EndPosition + 1,
-      //             ex.Values
-      //           )
-      //         }
-      //       }
-      //     }
-      //   }
-
-      // console.log('source', source)
 
       return source
     },
@@ -246,7 +165,6 @@ export default {
       }
       // 替换html 标签
       retTpl = retTpl.replace(/<.*?>/g, '')
-      // console.log('retTpl', retTpl)
       return retTpl
     },
     restoreToTemplateWithValue (htmlStr) {
@@ -260,7 +178,6 @@ export default {
       }
       // 替换html 标签
       retTplWithValue = retTplWithValue.replace(/<.*?>/g, '')
-      // console.log('retTplWithValue', retTplWithValue)
       return retTplWithValue
     },
     fillValues (htmlStr) {
@@ -271,7 +188,6 @@ export default {
       }
       // 替换html 标签
       retText = retText.replace(/<.*?>/g, '')
-      //   console.log('retText', retText)
       return retText
     },
     compileTemplateToUI (tpl) {
@@ -290,7 +206,6 @@ export default {
         const matchRegExp2 = tpl.match(regExp2)
         // console.log('matchRegExp2', matchRegExp2)
 
-        // console.log('0000', this.$refs[this.tpleditorCUID].$el.innerHTML)
         // 移除可编辑区域中的dom，避免内存泄露
         for (let index = 0; index < this.TemplateItemList.length; index++) {
           const element = this.TemplateItemList[index]
@@ -304,34 +219,18 @@ export default {
             document.getElementById(element.ElId).parentElement.remove()
           }
         }
-        // console.log('1111', this.$refs[this.tpleditorCUID].$el.innerHTML)
 
         this.TemplateItemList = []
 
         for (let index = 0; index < matchRegExp2.length; index++) {
           const input = document.createElement('input')
-          // input.className = 'ml-tpleditor-input'
           input.type = 'text'
-          //   input.tabIndex = -1
-          // input.style =
-          //   'width:50px;border:none;border-bottom:1px solid blue;outline: none;color: blue;text-align:center;'
 
-          //   const spanForSelect = document.createElement('span')
-          //   // spanForSelect.style = 'position:relative;width:80px;'
+          const spanForSelect = document.createElement('span')
 
-          //   const select = document.createElement('select')
-          //   //   select.tabIndex = -1
-          //   // select.style =
-          //   //   'width:80px;border:none;border-bottom:1px solid blue;outline: none;color: blue;'
-          //   // 'width:80px;border:none;border-bottom:1px solid blue;outline: none;color: blue;'
+          const select = document.createElement('select')
 
-          //   const selectInput = document.createElement('input')
-          //   //   selectInput.tabIndex = -1
-          //   // selectInput.style =
-          //   //   'width:calc(80px - 18px);position:absolute;left:0px;height: 18px;border: none;outline: none;color: blue;text-align:center;'
-          //   // 'width:62px;position:absolute;left:0px;height: 18px;border: none;outline: none;color: blue;text-align:center;'
-
-          const selectDiv = document.createElement('div')
+          const selectInput = document.createElement('input')
 
           const arr = regExp2.exec(tpl)
 
@@ -354,83 +253,36 @@ export default {
 
             const maxLengthStr = this.getMaxLenFromStrArr(strArr)
 
-            // if (select.options && select.options.length > 0) {
-            //   for (let idx = select.options.length - 1; idx >= 0; idx--) {
-            //     select.options.remove(idx)
-            //   }
-            // }
-
-            // for (let idx = 0; idx < strArr.length; idx++) {
-            //   const selectOption = document.createElement('option')
-            //   selectOption.value = strArr[idx]
-            //   selectOption.label = strArr[idx]
-            //   select.options.add(selectOption)
-            // }
-
-            // select.id = `${this.tpleditorCUID}_${index + 1}`
-
-            // selectInput.style = `width:${
-            //   this.SelectUnitWidth * maxLengthStr - 18
-            // }px;position:absolute;left:0px;top:2px;padding:0;height: 15px;border: none;outline: none;color: #409eff;text-align:center;`
-
-            // select.style = `width:${
-            //   this.SelectUnitWidth * maxLengthStr
-            // }px;border:none;border-bottom:1px solid #409eff;outline: none;color: #409eff;`
-
-            // spanForSelect.style = `position:relative;width:${
-            //   this.SelectUnitWidth * maxLengthStr
-            // }px;`
-
-            // spanForSelect.appendChild(select)
-            // spanForSelect.appendChild(selectInput)
-            // TemplateItem.Html = spanForSelect.outerHTML
-
-            /******************************************************/
-            // debugger
-            selectDiv.id = `select-${this.tpleditorCUID}_${index + 1}`
-            selectDiv.style = `width: ${
-              this.SelectUnitWidth * maxLengthStr
-            }px;height: 20px;box-sizing: border-box;position: relative;display:inline-block;`
-
-            const selectDivP = document.createElement('p')
-            selectDivP.style =
-              'width: 100%;;position: absolute;top: 0px;left: 0px;margin: 0px;border:none;border-bottom: 1px solid blue;margin-top: 2px;'
-
-            const selectDivPIpt = document.createElement('input')
-            selectDivPIpt.id = `${this.tpleditorCUID}_${index + 1}`
-
-            selectDivPIpt.style =
-              'width:calc(100% - 19px);left:0px;height: 18px;border: none;outline: none;padding: 0px;'
-            selectDivPIpt.type = 'text'
-            selectDivPIpt.setAttribute('data-type', 'select')
-
-            const selectDivPSpan = document.createElement('span')
-            // selectDivPSpan.id = `select-arrow-${this.tpleditorCUID}_${index + 1}`
-            selectDivPSpan.style =
-              '-webkit-user-select: none;color:blue;font-size:14px;'
-            selectDivPSpan.innerText = '▼'
-
-            const selectDivUl = document.createElement('ul')
-            selectDivUl.style =
-              'position: absolute;top: 7px;left: 0px;z-index: 1000;background-color: white;width: calc(100% - 2px);padding: 0px;list-style-type: none; display: none;border: 1px solid blue; border-top: none;-webkit-user-select: none;text-align: left;'
-
-            const selectItems = []
-            for (let idx = 0; idx < strArr.length; idx++) {
-              const selectDivUlli = document.createElement('li')
-              selectDivUlli.style = 'width:100%;height:18.4px;'
-              selectDivUlli.innerText = strArr[idx]
-              selectDivUlli.setAttribute('data-value', strArr[idx])
-              selectItems.push(selectDivUlli)
-              selectDivUl.appendChild(selectDivUlli)
+            if (select.options && select.options.length > 0) {
+              for (let idx = select.options.length - 1; idx >= 0; idx--) {
+                select.options.remove(idx)
+              }
             }
 
-            selectDivP.appendChild(selectDivPIpt)
-            selectDivP.appendChild(selectDivPSpan)
+            for (let idx = 0; idx < strArr.length; idx++) {
+              const selectOption = document.createElement('option')
+              selectOption.value = strArr[idx]
+              selectOption.label = strArr[idx]
+              select.options.add(selectOption)
+            }
 
-            selectDiv.appendChild(selectDivP)
-            selectDiv.appendChild(selectDivUl)
+            select.id = `${this.tpleditorCUID}_${index + 1}`
 
-            TemplateItem.Html = selectDiv.outerHTML
+            selectInput.style = `width:${
+              this.SelectUnitWidth * maxLengthStr - 18
+            }px;position:absolute;left:0px;top:2px;padding:0;height: 15px;border: none;outline: none;color: #409eff;text-align:center;`
+
+            select.style = `width:${
+              this.SelectUnitWidth * maxLengthStr
+            }px;border:none;border-bottom:1px solid #409eff;outline: none;color: #409eff;`
+
+            spanForSelect.style = `position:relative;width:${
+              this.SelectUnitWidth * maxLengthStr
+            }px;`
+
+            spanForSelect.appendChild(select)
+            spanForSelect.appendChild(selectInput)
+            TemplateItem.Html = spanForSelect.outerHTML
           } else {
             // 文本框
             ctrlType = 1
@@ -439,7 +291,6 @@ export default {
             input.style = `width:${
               this.InputUnitWidth * TemplateItem.Mark.length
             }px;border:none;border-bottom:1px solid #409eff;outline: none;color: #409eff;text-align:center;`
-            // input.tabIndex = index
 
             TemplateItem.Html = input.outerHTML
           }
@@ -448,14 +299,11 @@ export default {
             tpl,
             TemplateItem.StartPosition - 1,
             TemplateItem.EndPosition + 1,
-            // ctrlType ? input.outerHTML : spanForSelect.outerHTML
-            ctrlType ? input.outerHTML : selectDiv.outerHTML
+            ctrlType ? input.outerHTML : spanForSelect.outerHTML
           )
 
           this.TemplateItemList.push(TemplateItem)
         }
-
-        // console.log('this.TemplateItemList', this.TemplateItemList)
 
         div.innerHTML = tpl
 
@@ -472,172 +320,6 @@ export default {
               tagEle.setAttribute('value', this.InputValues[index])
               this.TemplateItemList[index].Html = tagEle.outerHTML
             }
-
-            if (tagEle.getAttribute('data-type', 'select')) {
-              const selectDiv = tagEle.parentElement.parentElement
-              const selectDivPIpt = tagEle
-              const selectDivPSpan = tagEle.nextElementSibling
-              const selectDivUl = tagEle.parentElement.nextElementSibling
-              const selectItems = selectDivUl.children
-
-              selectDivPIpt.onclick = function (e) {
-                if (selectDivPSpan.innerText === '▼') {
-                  selectDivPSpan.innerText = '▲'
-                } else {
-                  selectDivPSpan.innerText = '▼'
-                }
-
-                if (selectDivUl.style.display === 'none') {
-                  selectDivUl.style.display = 'block'
-                } else {
-                  selectDivUl.style.display = 'none'
-                }
-              }
-
-              let keyboardSelectedIdx = 0
-              selectDivPIpt.onkeydown = function (e) {
-                e.stopPropagation()
-
-                if (
-                  e &&
-                  (e.key === 'ArrowUp' ||
-                    e.key === 'ArrowDown' ||
-                    e.key === 'Enter')
-                ) {
-                  let hasEntered = false
-                  switch (e.key) {
-                    case 'ArrowUp':
-                      if (selectDivUl.style.display === 'block') {
-                        keyboardSelectedIdx--
-                        if (keyboardSelectedIdx < 0) {
-                          keyboardSelectedIdx = selectItems.length - 1
-                        }
-                      }
-                      break
-                    case 'ArrowDown':
-                      if (selectDivUl.style.display === 'block') {
-                        keyboardSelectedIdx++
-                        if (keyboardSelectedIdx > selectItems.length - 1) {
-                          keyboardSelectedIdx = 0
-                        }
-                      }
-                      break
-                    case 'Enter':
-                      selectItems[keyboardSelectedIdx].click()
-                      hasEntered = true
-                      break
-                    default:
-                    //   e.preventDefault()
-                    //   return false
-                  }
-
-                  const env = document.createEvent('MouseEvents')
-                  env.initEvent('mouseenter', false, true)
-                  selectItems[keyboardSelectedIdx].dispatchEvent(env)
-
-                  const siblingEle = self.sibling(
-                    selectItems[keyboardSelectedIdx]
-                  )
-                  for (let i = 0; i < siblingEle.length; i++) {
-                    const ele = siblingEle[i]
-                    ele.style.color = '#000'
-                    ele.style.backgroundColor = '#fff'
-                  }
-
-                  if (!hasEntered && selectDivUl.style.display === 'none') {
-                    selectDivPSpan.innerText = '▲'
-                    selectDivUl.style.display = 'block'
-                  }
-                } else if (e.key === 'Tab') {
-                  e.preventDefault()
-                  return false
-                }
-              }
-
-              selectDivPSpan.onclick = function (e) {
-                if (e.target.innerText === '▼') {
-                  e.target.innerText = '▲'
-                } else {
-                  e.target.innerText = '▼'
-                }
-
-                if (selectDivUl.style.display === 'none') {
-                  selectDivUl.style.display = 'block'
-                } else {
-                  selectDivUl.style.display = 'none'
-                }
-              }
-
-              for (let index = 0; index < selectItems.length; index++) {
-                const siEle = selectItems[index]
-                //   siEle.onkeydown = function (e) {
-                //     if (e.key === 'Enter') {
-                //       e.target.click()
-                //     }
-                //   }
-                siEle.onclick = function (e) {
-                  // console.log('e.target.innerText', e.target.innerText)
-                  // console.log(
-                  //   'e.target.attributes.data-value',
-                  //   e.target.attributes['data-value'].value
-                  // )
-
-                  selectDivPIpt.value = e.target.innerText
-
-                  selectDivUl.style.display = 'none'
-                  selectDivPSpan.innerText = '▼'
-
-                  e.target.style.color = '#fff'
-                  e.target.style.backgroundColor = 'blue'
-
-                  const siblingEle = self.sibling(e.target)
-                  for (let i = 0; i < siblingEle.length; i++) {
-                    const ele = siblingEle[i]
-                    ele.style.color = '#000'
-                    ele.style.backgroundColor = '#fff'
-                  }
-                }
-                siEle.onmouseenter = function (e) {
-                  e.target.style.color = '#fff'
-                  e.target.style.backgroundColor = 'blue'
-                  const siblingEle = self.sibling(e.target)
-                  for (let i = 0; i < siblingEle.length; i++) {
-                    const ele = siblingEle[i]
-                    ele.style.color = '#000'
-                    ele.style.backgroundColor = '#fff'
-                  }
-                }
-                siEle.onmouseleave = function (e) {
-                  if (selectDivPIpt.value !== e.target.innerText) {
-                    e.target.style.color = '#000'
-                    e.target.style.backgroundColor = '#fff'
-                  }
-                }
-              }
-
-              document.onclick = function (e) {
-                // 事件对象，兼容IE
-                const env = e || window.event
-                // 源对象，兼容火狐和IE
-                let target = env.target || env.srcElement
-                debugger
-                while (target) {
-                  // 循环判断至根节点，防止点击的是#select 和它的子元素
-                  if (target === selectDiv) {
-                    return
-                  }
-                  target = target.parentNode
-                }
-                selectDivUl.style.display = 'none'
-                selectDivPSpan.innerText = '▼'
-              }
-            } else {
-              tagEle.onkeydown = function (e) {
-                if (e.key === 'Tab') {
-                  e.preventDefault()
-                }
-              }
-            }
           } else if (tagEle instanceof HTMLSelectElement) {
             if (this.InputValues[index]) {
               const splitArr = (element.Mark && element.Mark.split(';')) || []
@@ -649,7 +331,6 @@ export default {
                   break
                 }
               }
-              // document.getElementById(element.ElId)[0].value = this.InputValues[index]
               tagEle.selectedIndex = m
               tagEle.nextElementSibling.value = this.InputValues[index]
               this.TemplateItemList[index].Html = tagEle.outerHTML
@@ -669,65 +350,14 @@ export default {
 
             // 选择器Tab 按键切换聚焦事件处理
             tagEle.onfocus = function (e) {
-              //   e.target.nextElementSibling.focus()
               e.target.style.outline = '1px solid #409eff'
-              //   console.log('e.target-1', e.target)
               element.Html = e.target.outerHTML
-              //   if (document.all) {
-              //     // IE浏览器
-              //     document.getElementById(element.ElId).blur()
-              //     document
-              //       .getElementById(element.ElId)
-              //       .nextElementSibling.focus()
-              //   } else {
-              //     // 其它浏览器
-              //     const env1 = document.createEvent('HTMLEvents')
-              //     env1.initEvent('blur', false, true)
-              //     document.getElementById(element.ElId).dispatchEvent(env1)
-              //     const env = document.createEvent('HTMLEvents')
-              //     env.initEvent('focus', false, true)
-              //     document
-              //       .getElementById(element.ElId)
-              //       .nextElementSibling.dispatchEvent(env)
-              //   }
             }
 
             tagEle.onblur = function (e) {
               e.target.style.outline = 'none'
-              //   console.log('e.target-2', e.target)
               element.Html = e.target.outerHTML
             }
-
-            tagEle.nextElementSibling.onkeydown = function (env) {
-              //   console.log('env', env)
-              //   document.getElementById(element.ElId).click()
-              //   if (document.all) {
-              //     // IE浏览器
-              //     document.getElementById(element.ElId).click()
-              //   } else {
-              //     // 其它浏览器
-              //     var e = document.createEvent('MouseEvents')
-              //     e.initEvent('click', false, true)
-              //     // e.initMouseEvent('click', true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null)
-              //     document.getElementById(element.ElId).dispatchEvent(e)
-              //   }
-            }
-
-            // // 选择器-输入框聚焦事件处理
-            // document.getElementById(
-            //   element.ElId
-            // ).nextElementSibling.onfocus = function () {
-            //   if (document.all) {
-            //     // IE浏览器
-            //     document.getElementById(element.ElId).click()
-            //   } else {
-            //     // 其它浏览器
-            //     var e = document.createEvent('MouseEvents')
-            //     e.initEvent('click', false, true)
-            //     env.initMouseEvent('click', true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null)
-            //     document.getElementById(element.ElId).dispatchEvent(e)
-            //   }
-            // }
           }
         }
       } else {
@@ -791,36 +421,6 @@ export default {
         }
       }
       return 0
-    },
-    getCursortPosition (obj) {
-      var cursorIndex = 0
-      if (document.selection) {
-        // IE Support
-        obj.focus()
-        var range = document.selection.createRange()
-        range.moveStart('character', -obj.value.length)
-        cursorIndex = range.text.length
-      } else if (obj.selectionStart || obj.selectionStart === 0) {
-        // another support
-        cursorIndex = obj.selectionStart
-      }
-      return cursorIndex
-    },
-    keepLastIndex (obj) {
-      if (window.getSelection) {
-        // ie11 10 9 ff safari
-        obj.focus() // 解决ff不获取焦点无法定位问题
-        let range = window.getSelection() // 创建range
-        range.selectAllChildren(obj) // range 选择obj下所有子内容
-        range.collapseToEnd() // 光标移至最后
-      } else if (document.selection) {
-        // ie10 9 8 7 6 5
-        let range = document.selection.createRange() // 创建选择对象
-        // var range = document.body.createTextRange();
-        range.moveToElementText(obj) // range定位到obj
-        range.collapse(false) // 光标移至最后
-        range.select()
-      }
     }
   }
 }
